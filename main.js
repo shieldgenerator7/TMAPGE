@@ -867,15 +867,15 @@ var GameLoop = function(){
 	// var pinkies = new Image();
 	// pinkies.src = DIR+"pinkies.png";
 	// var psScrollY = 0;//used for scrolling the background
-	var ponp = new Image();
-	ponp.src = DIR+"tmapge.png";//w:398 //Math.random(width - 100 + 100 + 1) + 100, Math.random(height - 100 + 100 + 1) + 100
+	// var ponp = new Image();
+	// ponp.src = DIR+"tmapge.png";//w:398 //Math.random(width - 100 + 100 + 1) + 100, Math.random(height - 100 + 100 + 1) + 100
 	var logo = new Image();
 	logo.src = DIR+"logo.png";
 	logo.onload = function(){scaleImage(logo, desiredWidth-10, 0);};
 function title_screen(){//title screen
-	ctx.drawImage(ponp, convertXPos(centerX(ponp.width)), 0, convertWidth(ponp.width),convertHeight(ponp.height));
-	ctx.drawImage(logo, convertXPos(centerX(logo.width)), convertYPos(desiredHeight - logo.height - 10), convertWidth(logo.width), convertHeight(logo.height));
-	var btnPlay = new Button("button_clear", 0, 0, "chest_inactive");
+	// ctx.drawImage(ponp, convertXPos(centerX(ponp.width)), 0, convertWidth(ponp.width),convertHeight(ponp.height));
+	
+	var btnPlay = new Button("button_tmapge", 0, 0, "chest_inactive");
 	// var btnCredits = new Button("credits", width/2, height/2 + 50, "credits");
 	// var btnInfo = new Button("howToPlay", 200, 200, "info");
 	if (btnPlay.checkClick(mouseX, mouseY, playerFiring)){
@@ -887,6 +887,7 @@ function title_screen(){//title screen
 	// }
 	
 	btnPlay.draw();
+	ctx.drawImage(logo, convertXPos(centerX(logo.width)), convertYPos(desiredHeight - logo.height - 10), convertWidth(logo.width), convertHeight(logo.height));
 	// btnCredits.draw();
 	// btnInfo.draw();
 	ctx.fillText("#MLGDMarathon December 2013", 10 + tcx, areaHeight - 10);
@@ -898,12 +899,14 @@ function chest_inactive(){
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
 	}
-	else if (btnPony.checkClick(mouseX, mouseY, playerFiring) && !playerFired){
+	else if (ponyCollection.length > 0 && !playerFired && btnPony.checkClick(mouseX, mouseY, playerFiring)){
 		playerFired = true;
 		setUpPonyInfo();
 	}
 	btnOpen.draw();//this button doesn't appear on screen, it's just an overlay
-	btnPony.draw();
+	if (ponyCollection.length > 0){
+		btnPony.draw();
+	}
 	chest.draw();//draw the whole chest
 };
 function chest_opening(){
@@ -1026,7 +1029,7 @@ function pony_info(){
 	btnLeft.draw();
 	btnRight.draw();
 	btnChest = new Button("button_pony",0,0,"chest_inactive");
-	if (btnChest.checkClick(mouseX,mouseY,playerFiring) && !playerFired){
+	if (!playerFired && btnChest.checkClick(mouseX,mouseY,playerFiring)){
 		playerFired = true;
 	}
 	btnChest.draw();

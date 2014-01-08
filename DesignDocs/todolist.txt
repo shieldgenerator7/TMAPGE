@@ -1,0 +1,9 @@
+====TO DO LIST====
+
+-Resize pony vectors
+-Center chest and pony sprite in most states
+-make side extra panel
+-make chest_info state
+-finish state transitions
+-put in buttons for transitioning between chest and pony states
+-find more vectors

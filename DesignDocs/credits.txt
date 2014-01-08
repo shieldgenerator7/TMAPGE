@@ -1,0 +1,7 @@
+TMAPGE Credits
+
+Morpheus Font - Kiwi Media
+LifeCraft Font - Eliot Truelove
+Some image size code - Binod Suman
+Pinkie Pie Party Vector (used for background) - pikn2
+Some text wrapping code - Colin Wiseman

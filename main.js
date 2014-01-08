@@ -386,16 +386,20 @@ function Pony(name,rarity,description){//Name of pony, also used for getting ima
 //SAVE: Adding to array
 //ponyArray: the pony template array
 var ponyArray = [
-	new Pony("Twilight Sparkle","Rare","Ah, Twilight Sparkle... What can I say about you? Except that you are a magnificent purple unicorn with a magical cutiemark. I should probably let you get back to your homework before you start freaking out about deadlines."),
-	new Pony("Pinkie Pie","Rare","Pink earth pony with balloon cutiemark"),
-	new Pony("Applejack","Rare","Orange earth pony with apple cutiemark"),
-	new Pony("Rainbow Dash","Rare","[description]"),
-	new Pony("Rarity","Rare","[description]"),
-	new Pony("Fluttershy","Rare","[description]"),
-	new Pony("Apple Bloom","Rare","[description]"),
-	new Pony("Sweetie Belle","Rare","[description]"),
-	new Pony("Scootaloo","Rare","[description]"),
-	new Pony("Babs Seed","Rare","[description]")
+	//Mane 6
+	new Pony("Twilight Sparkle","RARE","Ah, Twilight Sparkle... What can I say about you? Except that you are a magnificent purple unicorn with a magical cutiemark. I should probably let you get back to your homework before you start freaking out about deadlines."),
+	new Pony("Pinkie Pie","RARE","Pinkie Pie is a hyperactive earth pony who throws parties everyday to satisfy her goal of becoming Equestria's #1 party thrower. And she's well on her way with her balloon cutiemark as proof. YEAH! PARTY! PARTY! PARTY!"),
+	new Pony("Applejack","RARE","Orange earth pony with apple cutiemark"),
+	new Pony("Rainbow Dash","RARE","[description]"),
+	new Pony("Rarity","RARE","[description]"),
+	new Pony("Fluttershy","RARE","[description]"),
+	//CMC
+	new Pony("Apple Bloom","RARE","[description]"),
+	new Pony("Sweetie Belle","RARE","[description]"),
+	new Pony("Scootaloo","RARE","[description]"),
+	new Pony("Babs Seed","RARE","[description]"),
+	//OCs
+	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P")
 ];
 maxPonies = ponyArray.length;
 for (var i = 0; i < maxPonies; i++){
@@ -407,6 +411,7 @@ var ponyCollection = [];//the array that stores which ponies the player has obta
 var pickRandomPony = function(){
 	var ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0;//"random index"
 	if (ri == maxPonies){ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0; }//window.alert("ri = maxPonies!");}
+	// ri = 0;//TEST CODE: make it twi everytime so I can easily test text stuff
 	if (ponyArray[ri]){
 		return new Pony(ponyArray[ri].name, ponyArray[ri].rarity, ponyArray[ri].description);
 	}
@@ -549,6 +554,7 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	that.velY = 0;
 	that.centerable = true;//whether or not to allow automatic centering: true = allow, false = don't allow
 	that.centerText = true;//whether or not it should align its text center
+	that.textSize = 50;
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -618,9 +624,13 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
 				ctxBackup();
 				ctx.fillStyle = 'black';
-				ctx.font="40px Arial";
+				ctx.font= convertHeight(that.textSize)+"px Arial";
 				//ctx.fillText(that.text, convertXPos(that.X + 20), convertYPos(that.Y + 20), convertWidth(that.image.width*2),convertHeight(40));//that.text
-				wrapText(ctx, that.text, that.X + 20, that.Y + 60 + 10, that.image.width-40, 80, that.centerText);
+				var usedY = that.Y + that.textSize + 10;
+				if (that.centerText){
+					usedY = (that.image.height - that.textSize)/2 + that.Y;// + that.textSize/2 +10;
+				}
+				wrapText(ctx, that.text, that.X + 20, usedY, that.image.width-40, that.textSize *1.5, that.centerText);
 				ctxRestore();
 			}
 			catch (e) {
@@ -940,7 +950,8 @@ function chest_pony_out(){
 		titleFrame = new TextFrame(newPony.name, "titleFrame", 0, 0);
 		descFrame = new TextFrame(newPony.description, "descFrame", 0, desiredHeight/2);
 		descFrame.centerText = false;
-		rareFrame = new TextFrame(newPony.rarity, "titleFrame", 0, 150);
+		descFrame.textSize = 40;
+		rareFrame = new TextFrame(newPony.rarity, "rareFrame", 0, 150);
 		switchGameMode("chest_info");
 	}
 	//pimg = newPony.image;
@@ -987,8 +998,16 @@ function pony_info(){
 	var currentPony = ponyCollection[cpi];
 	currentPony.X = centerX(currentPony.image.width);
 	currentPony.draw();
-	btnLeft = new Button ("button_clear",0,desiredHeight/2,0);
-	btnRight = new Button ("button_clear",desiredWidth - 50,desiredHeight/2,0);
+		titleFrame = new TextFrame(currentPony.name, "titleFrame", 0, 0);
+		descFrame = new TextFrame(currentPony.description, "descFrame", 0, desiredHeight/2);
+		descFrame.centerText = false;
+		descFrame.textSize = 40;
+		rareFrame = new TextFrame(currentPony.rarity, "rareFrame", 0, 150);
+		titleFrame.draw();
+		rareFrame.draw();
+		descFrame.draw();
+	btnLeft = new Button ("arrow_left",0,desiredHeight/2-160,0);
+	btnRight = new Button ("arrow_right",desiredWidth - 100,desiredHeight/2-160,0);
 	//the following two controls may seem switched, but that's just to create the illusion that the newest pony is the first in the list (when internally it's the last)
 	if (btnLeft.checkClick(mouseX, mouseY, playerFiring) && !playerFired){
 		cpi += 1;
@@ -1006,7 +1025,7 @@ function pony_info(){
 	}
 	btnLeft.draw();
 	btnRight.draw();
-	btnChest = new Button("button_clear",0,0,"chest_inactive");
+	btnChest = new Button("button_pony",0,0,"chest_inactive");
 	if (btnChest.checkClick(mouseX,mouseY,playerFiring) && !playerFired){
 		playerFired = true;
 	}

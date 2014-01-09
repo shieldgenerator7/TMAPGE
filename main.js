@@ -916,7 +916,7 @@ function title_screen(){//title screen
 }
 var chest = new Chest();
 function chest_inactive(){
-	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-44,"chest_opening");
+	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_opening");
 	btnPony = new Button ("button_pony",0,0,"pony_info");
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
@@ -940,7 +940,7 @@ function chest_opening(){
 	chest.draw();
 };
 function chest_pony_up(){//he pony moving up out of the chest
-	//newPony.velY -= 0.25;
+	newPony.velY -= 0.25;
 	newPony.move();
 	if (newPony.getBottom() <= chest.getFrontTop()){
 		newPony.velY = 0;

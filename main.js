@@ -42,6 +42,7 @@ var setupCanvas = function(){//sets up the canvas dimensions
 	//Set up ctx text settings
 	ctx.textAlign="left"; 
 	ctx.textBaseline="top"; 
+	ctx.font = "15px Roman"
 }
 setupCanvas();
 
@@ -122,16 +123,6 @@ var clear = function(){
 	// ctx.fillStyle = 'black';
 	// ctx.font="20px Arial";
 	// ctx.fillText("Score: " + score,0,480);
-}
-var ctxfillstyle, ctxfont;
-var ctxBackup = function(){
-	ctxfillstyle = ctx.fillStyle;
-	ctxfont = ctx.font;
-}
-
-var ctxRestore = function(){
-	ctx.fillStyle = ctxfillstyle;
-	ctx.font = ctxfont;
 }
 
 var drawForeGround = function(){
@@ -458,11 +449,11 @@ function Chest(){//Chest class
 	that.frontImage = new Image();
 	that.markForDeletion = false;
 	
-	that.image = showImage(DIR+"chest.png");
-	that.width = imgWidth;
-	that.height = imgHeight;
-	that.frontImage = showImage(DIR+"chest.png");
-	that.frames = 0;
+	that.image = showImage(DIR+"chest_anim.png");
+	that.width = 590;
+	that.height = 579;
+	that.frontImage = showImage(DIR+"chest_front.png");
+	that.frames = 1;
 	that.actualFrame = 0;
 	that.X = 0;
 	that.Y = desiredHeight/2;//position of top of front
@@ -499,12 +490,12 @@ function Chest(){//Chest class
 	that.interval = 0;
 	that.draw = function(){//draws the whole thing
 		if (that.velX == 0){
-			that.X = centerX(that.image.width);
+			that.X = centerX(that.width);
 		}
 		try {
 			ctx.drawImage(that.image, 
-			//0, that.height * that.actualFrame, that.width, that.height, 
-			convertXPos(that.X), convertYPos(that.Y - (that.image.height - that.frontImage.height)), convertWidth(that.image.width), convertHeight(that.image.height));
+			that.width * that.actualFrame, 0, that.width, that.height, 
+			convertXPos(that.X), convertYPos(that.Y - (that.height - that.frontImage.height)), convertWidth(that.width), convertHeight(that.height));
 			// ctx.fillStyle = 'black';
 			// ctx.font="20px Arial";
 			// ctx.fillText(that.getNumber(), that.X, that.Y + that.height);
@@ -527,11 +518,11 @@ function Chest(){//Chest class
 	}
 	that.drawFront = function(){//only draws the front
 		if (that.velX == 0){
-			that.X = centerX(that.image.width);
+			that.X = centerX(that.width);
 		}
 		try {
 			ctx.drawImage(that.frontImage, 
-			convertXPos(that.X), convertYPos(that.Y), convertWidth(that.frontImage.width), convertHeight(that.frontImage.height));
+			convertXPos(that.X), convertYPos(that.Y), convertWidth(that.width), convertHeight(that.frontImage.height));
 			}
 			catch (e) {
 			};
@@ -637,7 +628,7 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 				//0, that.height * that.actualFrame, that.width, that.height, 
 				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
 				ctx.fillStyle = 'black';
-				ctx.font= convertHeight(that.textSize)+"px Arial";
+				ctx.font= convertHeight(that.textSize)+"px Roman";
 				//ctx.fillText(that.text, convertXPos(that.X + 20), convertYPos(that.Y + 20), convertWidth(that.image.width*2),convertHeight(40));//that.text
 				that.usedY = that.Y + 20;		
 				var widthThing = (ctx.measureText(that.text).width)/canvasRatio;
@@ -700,6 +691,14 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	// howManyPinkies += 1;
 }
 
+var wrapTextData = function(){//variable used for storing info from wrapText method
+	var that = this;
+	
+	that.left = 0;
+	that.right = 0;
+	that.top = 0;
+	that.bottom = 0;
+};
 function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
 		//copied from Colin Wiseman (http://stackoverflow.com/questions/5026961/html5-canvas-ctx-filltext-wont-do-line-breaks) on 1-6-2013
 		//modified 1-6-2013
@@ -883,7 +882,7 @@ var GameLoop = function(){
 	ctx.fillText("("+mouseX+", "+mouseY+") "+playerFiring,areaWidth-100+tcx,20);
 	ctx.fillText(gameMode,areaWidth-100+tcx,40);
 	ctx.fillText((cpi+1)+" / "+ponyCollection.length,areaWidth-100+tcx,60);
-	//drawForeGround();
+	drawForeGround();
 }
 
 	//SAVE: scrolling background
@@ -913,11 +912,11 @@ function title_screen(){//title screen
 	ctx.drawImage(logo, convertXPos(centerX(logo.width)), convertYPos(desiredHeight - logo.height - 10), convertWidth(logo.width), convertHeight(logo.height));
 	// btnCredits.draw();
 	// btnInfo.draw();
-	ctx.fillText("#MLGDMarathon December 2013", 10 + tcx, areaHeight - 10);
+	ctx.fillText("#MLGDMarathon December 2013", 5 + tcx, areaHeight - 20);
 }
 var chest = new Chest();
 function chest_inactive(){
-	btnOpen = new Button ("button_clear",chest.X,chest.Y,"chest_opening");
+	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-44,"chest_opening");
 	btnPony = new Button ("button_pony",0,0,"pony_info");
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
@@ -933,7 +932,7 @@ function chest_inactive(){
 	chest.draw();//draw the whole chest
 };
 function chest_opening(){
-	if (modeTime == 50){//chest.atLastFrame()){
+	if (chest.atLastFrame()){
 		switchGameMode("chest_pony_up");
 		newPony = pickRandomPony();//sets newPony to a new instance of a randomly chosen pony
 		newPony.velY = -5;
@@ -941,7 +940,7 @@ function chest_opening(){
 	chest.draw();
 };
 function chest_pony_up(){//he pony moving up out of the chest
-	newPony.velY -= 0.25;
+	//newPony.velY -= 0.25;
 	newPony.move();
 	if (newPony.getBottom() <= chest.getFrontTop()){
 		newPony.velY = 0;

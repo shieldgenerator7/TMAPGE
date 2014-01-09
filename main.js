@@ -8,7 +8,7 @@ mouseX, mouseY,//stored mouse coordinates
 gLoop,
 c = document.getElementById('c'),
 ctx = c.getContext('2d');
-ctx.textAlign = "center";
+// ctx.save();
 DIR = "Resources\\";
 PONY_DIR = DIR+"Ponies\\";
 
@@ -38,6 +38,10 @@ var setupCanvas = function(){//sets up the canvas dimensions
 	areaWidth = (desiredWidth*areaHeight)/desiredHeight;//make the width proportional
 	tcx = (c.width - areaWidth)/2;//set the true canvas x variable
 	canvasRatio = areaHeight / desiredHeight;
+	//
+	//Set up ctx text settings
+	ctx.textAlign="left"; 
+	ctx.textBaseline="top"; 
 }
 setupCanvas();
 
@@ -555,6 +559,8 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	that.centerable = true;//whether or not to allow automatic centering: true = allow, false = don't allow
 	that.centerText = true;//whether or not it should align its text center
 	that.textSize = 50;
+	that.X2 = that.X + 20 + ctx.measureText(that.text).width;//X2 is used to get the end of the line (if it is a one-liner)
+	that.rotate = 0;
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -617,23 +623,33 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 		if (!that.markForDeletion){
 			if (that.centerable){
 				that.X = centerX(that.image.width);
+				// that.X2 = that.X + 20 + centerX(ctx.measureText(that.text).width) + ctx.measureText(that.text).width;
 			}
-			try {
+			try {			
+				ctx.save();
+				if (that.rotate != 0){
+					//ctx.translate(convertXPos(that.X),convertYPos(that.Y));
+					ctx.translate(convertXPos(that.X+that.image.width/2), convertYPos(that.Y+that.image.height/2));
+					ctx.rotate(that.rotate*Math.PI/180);
+					ctx.translate(-convertXPos(that.X+that.image.width/2), -convertYPos(that.Y+that.image.height/2));
+				}
 				ctx.drawImage(that.image, 
 				//0, that.height * that.actualFrame, that.width, that.height, 
 				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
-				ctxBackup();
 				ctx.fillStyle = 'black';
 				ctx.font= convertHeight(that.textSize)+"px Arial";
 				//ctx.fillText(that.text, convertXPos(that.X + 20), convertYPos(that.Y + 20), convertWidth(that.image.width*2),convertHeight(40));//that.text
-				var usedY = that.Y + that.textSize + 10;
+				that.usedY = that.Y + 20;		
+				var widthThing = (ctx.measureText(that.text).width)/canvasRatio;
+				that.X2 = that.X + centerX(widthThing) + widthThing;
 				if (that.centerText){
-					usedY = (that.image.height - that.textSize)/2 + that.Y;// + that.textSize/2 +10;
+					that.usedY = (that.image.height - that.textSize)/2 + that.Y;//- that.textSize/2;
 				}
-				wrapText(ctx, that.text, that.X + 20, usedY, that.image.width-40, that.textSize *1.5, that.centerText);
-				ctxRestore();
+				wrapText(ctx, that.text, that.X + 20, that.usedY, that.image.width-40, that.textSize *1.5, that.centerText);
+				ctx.restore();
 			}
 			catch (e) {
+			window.alert(e);
 			};
 
 			// if (that.interval == 4 ) {
@@ -699,9 +715,13 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
                 var metrics = context.measureText(testLine);
                 var testWidth = metrics.width;
 
-                if (testWidth > convertWidth(maxWidth-10)) {
+                if (testWidth > convertWidth(maxWidth)) {
+					line = line.trim();
 					if (!centerText){context.fillText(line.trim(), convertXPos(x), convertYPos(y));}
-                    else{context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (testWidth/canvasRatio)) / 2)), convertYPos(y));}
+                    else{
+						usedWidth = ctx.measureText(line).width;
+						context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (usedWidth/canvasRatio)) / 2)), convertYPos(y));
+					}
                     line = words[n] + " ";
                     y += lineHeight;
                 }
@@ -709,9 +729,12 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
                     line = testLine;
                 }
             }
-
+			line = line.trim();
 			if (!centerText){context.fillText(line.trim(), convertXPos(x), convertYPos(y));}
-			else{context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (testWidth/canvasRatio)) / 2)), convertYPos(y));}
+			else{
+				usedWidth = ctx.measureText(line).width;
+				context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (usedWidth/canvasRatio)) / 2)), convertYPos(y));
+			}
             // context.fillText(line.trim(), convertXPos(x), convertYPos(y));//TEST CODE
             // context.fillText(line.trim(), convertXPos(centerX(testWidth/canvasRatio)), convertYPos(y));//x+ ((maxWidth - (testWidth/canvasRatio)) / 2)), convertYPos(y));
             y += lineHeight;
@@ -860,7 +883,7 @@ var GameLoop = function(){
 	ctx.fillText("("+mouseX+", "+mouseY+") "+playerFiring,areaWidth-100+tcx,20);
 	ctx.fillText(gameMode,areaWidth-100+tcx,40);
 	ctx.fillText((cpi+1)+" / "+ponyCollection.length,areaWidth-100+tcx,60);
-	drawForeGround();
+	//drawForeGround();
 }
 
 	//SAVE: scrolling background
@@ -954,7 +977,9 @@ function chest_pony_out(){
 		descFrame = new TextFrame(newPony.description, "descFrame", 0, desiredHeight/2);
 		descFrame.centerText = false;
 		descFrame.textSize = 40;
-		rareFrame = new TextFrame(newPony.rarity, "rareFrame", 0, 150);
+		rareFrame = new TextFrame(newPony.rarity, "rareFrame", titleFrame.X2, 0);
+		rareFrame.centerable = false;
+		rareFrame.rotate = -20;
 		switchGameMode("chest_info");
 	}
 	//pimg = newPony.image;
@@ -976,6 +1001,7 @@ function chest_info(){
 	newPony.draw();
 	titleFrame.draw();
 	descFrame.draw();
+	rareFrame.X = titleFrame.X2;
 	rareFrame.draw();
 };
 var newChest = new Chest();
@@ -997,28 +1023,42 @@ function setUpPonyInfo(){
 	cpi = ponyCollection.length - 1;
 }
 var cpi = 0;//"current pony index"
+var hidePonyInfo = false;
 function pony_info(){
 	var currentPony = ponyCollection[cpi];
 	currentPony.X = centerX(currentPony.image.width);
 	currentPony.draw();
+	if (!hidePonyInfo){
 		titleFrame = new TextFrame(currentPony.name, "titleFrame", 0, 0);
 		descFrame = new TextFrame(currentPony.description, "descFrame", 0, desiredHeight/2);
 		descFrame.centerText = false;
 		descFrame.textSize = 40;
-		rareFrame = new TextFrame(currentPony.rarity, "rareFrame", 0, 150);
+		rareFrame = new TextFrame(currentPony.rarity, "rareFrame", 0, 0);
+		rareFrame.centerable = false;
+		rareFrame.rotate = -20;
 		titleFrame.draw();
+		rareFrame.X = titleFrame.X2;
 		rareFrame.draw();
 		descFrame.draw();
+		
 	btnLeft = new Button ("arrow_left",0,desiredHeight/2-160,0);
 	btnRight = new Button ("arrow_right",desiredWidth - 100,desiredHeight/2-160,0);
+	btnChest = new Button("button_pony",0,0,"chest_inactive");
 	//the following two controls may seem switched, but that's just to create the illusion that the newest pony is the first in the list (when internally it's the last)
-	if (btnLeft.checkClick(mouseX, mouseY, playerFiring) && !playerFired){
+	if (cpi < (ponyCollection.length - 1) && !playerFired && btnLeft.checkClick(mouseX, mouseY, playerFiring)){
 		cpi += 1;
 		playerFired = true;
 	}
-	else if (btnRight.checkClick(mouseX, mouseY, playerFiring) && !playerFired){
+	else if (cpi > 0 && !playerFired && btnRight.checkClick(mouseX, mouseY, playerFiring)){
 		cpi -= 1;
 		playerFired = true;
+	}
+	else if (!playerFired && btnChest.checkClick(mouseX,mouseY,playerFiring)){
+		playerFired = true;
+	}
+	else if (!playerFired && playerFiring){
+		playerFired = true;
+		hidePonyInfo = !hidePonyInfo;
 	}
 	if (cpi < 0){
 		cpi = 0;
@@ -1026,13 +1066,14 @@ function pony_info(){
 	if (cpi > ponyCollection.length - 1){
 		cpi = ponyCollection.length - 1;
 	}
-	btnLeft.draw();
-	btnRight.draw();
-	btnChest = new Button("button_pony",0,0,"chest_inactive");
-	if (!playerFired && btnChest.checkClick(mouseX,mouseY,playerFiring)){
-		playerFired = true;
-	}
+	if (cpi < (ponyCollection.length - 1)){btnLeft.draw();}
+	if (cpi > 0){btnRight.draw();}
 	btnChest.draw();
+	}
+	else if (!playerFired && playerFiring){
+		playerFired = true;
+		hidePonyInfo = !hidePonyInfo;
+	}
 };
 // var creditsImg = new Image();
 // creditsImg.src = DIR+"creditPage.png";

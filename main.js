@@ -393,8 +393,15 @@ var ponyArray = [
 	new Pony("Sweetie Belle","RARE","[description]"),
 	new Pony("Scootaloo","RARE","[description]"),
 	new Pony("Babs Seed","RARE","[description]"),
+	//Royalty
+	new Pony("Princess Celestia","ROYALLY RARE","[description]"),
+	new Pony("Princess Luna","ROYALLY RARE","[description]"),
+	new Pony("Princess Cadance","ROYALLY RARE","[description]"),
+	new Pony("Shining Armor","ROYALLY RARE","[description]"),
 	//OCs
-	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P")
+	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
+	new Pony("Phi","DIGITALLY RARE","This is Phi, the energetic My Little Game Dev mascot. She likes action games and is always looking for a new challenge."),
+	new Pony("Techna","DIGITALLY RARE","This is Techna, the calm My Little Game Dev mascot. She likes RPGs and puzzles games and enjoys figuring things out.")
 ];
 maxPonies = ponyArray.length;
 for (var i = 0; i < maxPonies; i++){
@@ -987,7 +994,7 @@ function chest_pony_out(){
 var titleFrame, descFrame, rareFrame;
 function chest_info(){
 	chest.draw();
-	btnNext = new Button ("button_clear",chest.X,chest.Y,"chest_slide");
+	btnNext = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_slide");
 	if (btnNext.checkClick(mouseX, mouseY, playerFiring)){
 		newChest = new Chest();
 		newChest.X = desiredWidth + 10;//start it off screen

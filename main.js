@@ -470,6 +470,11 @@ function Chest(){//Chest class
 	that.velX = 0;//used for moving
 	that.velY = 0;
 	that.animateOpening = false;
+	
+	that.numFrame = new TextFrame("#"+(ponyCollection.length+1),"numFrame",0,that.Y+61);
+	that.numFrame.centerable = true;
+	that.numFrame.drawImageLast = true;
+	that.numFrame.textFont = "#827741";
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -501,11 +506,17 @@ function Chest(){//Chest class
 	that.draw = function(){//draws the whole thing
 		if (that.velX == 0){
 			that.X = centerX(that.width);
+			that.numFrame.centerable = true;
+		}
+		else{
+			that.numFrame.centerable = false;
 		}
 		try {
 			ctx.drawImage(that.image, 
 			that.width * that.actualFrame, 0, that.width, that.height, 
 			convertXPos(that.X), convertYPos(that.Y - (that.height - that.frontImage.height)), convertWidth(that.width), convertHeight(that.height));
+			that.numFrame.X = that.X+(that.width-that.numFrame.image.width)/2;
+			that.numFrame.draw();
 			// ctx.fillStyle = 'black';
 			// ctx.font="20px Arial";
 			// ctx.fillText(that.getNumber(), that.X, that.Y + that.height);
@@ -529,10 +540,16 @@ function Chest(){//Chest class
 	that.drawFront = function(){//only draws the front
 		if (that.velX == 0){
 			that.X = centerX(that.width);
+			that.numFrame.centerable = true;
+		}
+		else{
+			that.numFrame.centerable = false;
 		}
 		try {
 			ctx.drawImage(that.frontImage, 
 			convertXPos(that.X), convertYPos(that.Y), convertWidth(that.width), convertHeight(that.frontImage.height));
+			that.numFrame.X = that.X+(that.width-that.numFrame.image.width)/2;
+			that.numFrame.draw();
 			}
 			catch (e) {
 			};
@@ -560,8 +577,10 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	that.centerable = true;//whether or not to allow automatic centering: true = allow, false = don't allow
 	that.centerText = true;//whether or not it should align its text center
 	that.textSize = 50;
+	that.textFont = "black";
 	that.X2 = that.X + 20 + ctx.measureText(that.text).width;//X2 is used to get the end of the line (if it is a one-liner)
 	that.rotate = 0;
+	that.drawImageLast = false;
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -634,10 +653,13 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 					ctx.rotate(that.rotate*Math.PI/180);
 					ctx.translate(-convertXPos(that.X+that.image.width/2), -convertYPos(that.Y+that.image.height/2));
 				}
-				ctx.drawImage(that.image, 
-				//0, that.height * that.actualFrame, that.width, that.height, 
-				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
-				ctx.fillStyle = 'black';
+				if (!that.drawImageLast){
+					ctx.drawImage(that.image, 
+					//0, that.height * that.actualFrame, that.width, that.height, 
+					// convertXPos(wrapTextData.getX()), convertYPos(wrapTextData.getY()), convertWidth(wrapTextData.getWidth()), convertHeight(wrapTextData.getHeight()));
+					convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
+				}
+				ctx.fillStyle = that.textFont;
 				ctx.font= convertHeight(that.textSize)+"px Roman";
 				//ctx.fillText(that.text, convertXPos(that.X + 20), convertYPos(that.Y + 20), convertWidth(that.image.width*2),convertHeight(40));//that.text
 				that.usedY = that.Y + 20;		
@@ -646,7 +668,15 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 				if (that.centerText){
 					that.usedY = (that.image.height - that.textSize)/2 + that.Y;//- that.textSize/2;
 				}
-				wrapText(ctx, that.text, that.X + 20, that.usedY, that.image.width-40, that.textSize *1.5, that.centerText);
+				wrapText(ctx, that.text, that.X + 20, that.usedY, that.image.width-40, that.textSize *1.25, that.centerText);		
+				if (that.drawImageLast){	
+					var buffer = 30;
+					ctx.drawImage(that.image, 
+					//0, that.height * that.actualFrame, that.width, that.height, 
+					convertXPos(wrapTextData.getX()-buffer), convertYPos(wrapTextData.getY()-buffer), convertWidth(wrapTextData.getWidth()+buffer*2), convertHeight(wrapTextData.getHeight()+buffer*2));
+					// convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));					
+					wrapText(ctx, that.text, that.X + 20, that.usedY, that.image.width-40, that.textSize *1.25, that.centerText);
+				}
 				ctx.restore();
 			}
 			catch (e) {
@@ -701,17 +731,56 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	// howManyPinkies += 1;
 }
 
-var wrapTextData = function(){//variable used for storing info from wrapText method
+var wrapTextDataClass = function(){//variable used for storing info from wrapText method
 	var that = this;
 	
-	that.left = 0;
-	that.right = 0;
-	that.top = 0;
-	that.bottom = 0;
+	that.left;// = 0;
+	that.right;// = 0;
+	that.top;// = 0;
+	that.bottom;// = 0;
+	
+	that.valued = false;
+	
+	that.clear = function(){
+		that.valued = false;
+	}
+	
+	that.update = function(x,y,x2,y2){//pass in the left,top,right,bottom, NOT width, height
+		if (!that.valued || x < that.left){
+			that.left = x;
+		}
+		if (!that.valued || x2 > that.right){
+			that.right = x2;
+		}
+		if (!that.valued || y < that.top){
+			that.top = y;
+		}
+		if (!that.valued || y2 > that.bottom){
+			that.bottom = y2;
+		}
+		that.valued = true;
+	}
+	
+	that.getX = function(){
+		return that.left;
+	}
+	that.getY = function(){
+		return that.top;
+	}
+	that.getWidth = function(){
+		return that.right - that.left;
+	}
+	that.getHeight = function(){
+		return that.bottom - that.top;
+	}
 };
+var wrapTextData = new wrapTextDataClass();
 function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
 		//copied from Colin Wiseman (http://stackoverflow.com/questions/5026961/html5-canvas-ctx-filltext-wont-do-line-breaks) on 1-6-2013
 		//modified 1-6-2013
+		
+		wrapTextData.clear();
+		
         var cars = text.split("\n");
 
         for (var ii = 0; ii < cars.length; ii++) {
@@ -729,7 +798,9 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
 					if (!centerText){context.fillText(line.trim(), convertXPos(x), convertYPos(y));}
                     else{
 						usedWidth = ctx.measureText(line).width;
-						context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (usedWidth/canvasRatio)) / 2)), convertYPos(y));
+						var usedX = x+ ((maxWidth - (usedWidth/canvasRatio)) / 2);
+						context.fillText(line.trim(), convertXPos(usedX), convertYPos(y));
+						wrapTextData.update(usedX, y+lineHeight, usedX + (usedWidth/canvasRatio), y + lineHeight*2);
 					}
                     line = words[n] + " ";
                     y += lineHeight;
@@ -742,7 +813,9 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
 			if (!centerText){context.fillText(line.trim(), convertXPos(x), convertYPos(y));}
 			else{
 				usedWidth = ctx.measureText(line).width;
-				context.fillText(line.trim(), convertXPos(x+ ((maxWidth - (usedWidth/canvasRatio)) / 2)), convertYPos(y));
+				var usedX = x+ ((maxWidth - (usedWidth/canvasRatio)) / 2);
+				context.fillText(line.trim(), convertXPos(usedX), convertYPos(y));
+				wrapTextData.update(usedX, y, usedX + (usedWidth/canvasRatio), y + lineHeight);
 			}
             // context.fillText(line.trim(), convertXPos(x), convertYPos(y));//TEST CODE
             // context.fillText(line.trim(), convertXPos(centerX(testWidth/canvasRatio)), convertYPos(y));//x+ ((maxWidth - (testWidth/canvasRatio)) / 2)), convertYPos(y));
@@ -940,6 +1013,7 @@ function chest_inactive(){
 		btnPony.draw();
 	}
 	chest.draw();//draw the whole chest
+	//numFrame.draw();
 };
 function chest_opening(){
 	if (chest.atLastFrame()){
@@ -947,7 +1021,8 @@ function chest_opening(){
 		newPony = pickRandomPony();//sets newPony to a new instance of a randomly chosen pony
 		newPony.velY = -5;
 	}
-	chest.draw();
+	chest.draw();	
+	//numFrame.draw();
 };
 function chest_pony_up(){//he pony moving up out of the chest
 	newPony.velY -= 0.25;
@@ -975,6 +1050,7 @@ function chest_pony_up(){//he pony moving up out of the chest
 	ctx = oldctx;
 	ctx.drawImage(nc, 0, 0);
 	chest.drawFront();
+	//numFrame.draw();
 };
 // var pimg = new Image();
 // pimg.src = PONY_DIR+ponyArray[1].name+".png";
@@ -983,6 +1059,7 @@ var pw = 500,
 pwv = 1;//how much to increment pw by
 function chest_pony_out(){
 	chest.draw();
+	//numFrame.draw();
 	//newPony.X = 0;
 	//newPony.Y = 0;
 	if (newPony.Y < 0){//centerY(newPony.image.height)){
@@ -1002,7 +1079,8 @@ function chest_pony_out(){
 		descFrame.textSize = 40;
 		rareFrame = new TextFrame(newPony.rarity, "rareFrame", titleFrame.X2, 0);
 		rareFrame.centerable = false;
-		rareFrame.rotate = -20;
+		rareFrame.rotate = -20;		
+		rareFrame.drawImageLast = true;
 		switchGameMode("chest_info");
 	}
 	//pimg = newPony.image;
@@ -1012,10 +1090,11 @@ var titleFrame, descFrame, rareFrame;
 var ponySoundChannel;
 function chest_info(){
 	chest.draw();
+	//numFrame.draw();
 	btnNext = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_slide");
 	if (btnNext.checkClick(mouseX, mouseY, playerFiring)){
 		newChest = new Chest();
-		newChest.X = desiredWidth + 10;//start it off screen
+		newChest.X = desiredWidth + centerX(chest.image.width);//start it off screen
 		// if (ponySoundChannel){
 			// ponySoundChannel.stop();
 		// }
@@ -1037,6 +1116,9 @@ function chest_slide(){
 	chest.slideOff();
 	newPony.slideOff();
 	newChest.slideOff();
+	if (newChest.velX != 0 && newChest.X < centerX(newChest.width)){
+		newChest.velX = 0;
+	}
 	if (chest.isOffScreen() && newPony.isOffScreen()){
 		setUp();
 		chest = newChest;
@@ -1064,6 +1146,7 @@ function pony_info(){
 		rareFrame = new TextFrame(currentPony.rarity, "rareFrame", 0, 0);
 		rareFrame.centerable = false;
 		rareFrame.rotate = -20;
+		rareFrame.drawImageLast = true;
 		titleFrame.draw();
 		rareFrame.X = titleFrame.X2;
 		rareFrame.draw();

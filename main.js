@@ -255,6 +255,8 @@ function Pony(name,rarity,description){//Name of pony, also used for getting ima
 	that.Y = desiredHeight - that.image.height;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
 	that.velX = 0;//used for moving
 	that.velY = 0;
+	
+	that.sound = new Audio(PONY_DIR+name+".mp3");
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -384,22 +386,23 @@ var ponyArray = [
 	//Mane 6
 	new Pony("Twilight Sparkle","RARE","Ah, Twilight Sparkle... What can I say about you? Except that you are a magnificent purple unicorn with a magical cutiemark. I should probably let you get back to your homework before you start freaking out about deadlines."),
 	new Pony("Pinkie Pie","RARE","Pinkie Pie is a hyperactive earth pony who throws parties everyday to satisfy her goal of becoming Equestria's #1 party thrower. And she's well on her way with her balloon cutiemark as proof. YEAH! PARTY! PARTY! PARTY!"),
-	new Pony("Applejack","RARE","Orange earth pony with apple cutiemark"),
-	new Pony("Rainbow Dash","RARE","[description]"),
-	new Pony("Rarity","RARE","[description]"),
-	new Pony("Fluttershy","RARE","[description]"),
+	new Pony("Applejack","RARE","Well howdy there!  I\’m Applejack, but ya\’ll can call me AJ if you like!  I\’m the most hardworking pony around these parts and produce the best apple cider in all of Equestria!  I got some delicious apple fritters, apple pies, apple tarts, zap apple jam, etc. to get a makin\’.  I’ll see ya\’ll later!"),
+	new Pony("Rainbow Dash","RARE","Rainbow Dash is the best most awesomest pony ever. As one filly said, she's \"super-ultra-extreme-awesomazing.\" She can fly really fast and is the only pony to ever pull off a Sonic Rainboom. She is loyal to her friends and is going to become the captain of the Wonderbolts some day. So awesome /)^3^(\\	"),
+	new Pony("Rarity","RARE","I may be the most lady-like and delicate out of my pony friends, but that most certainly doesn’t mean that I cannot defend myself.  I was easily able to outwit the diamond dogs and get all those jewels that they slaved me to dig out.  I simply must go! This treasure chest has left my beautiful hair in rugged condition!  Ohhh my hair!"),
+	new Pony("Fluttershy","RARE","Um hi there I’m... Fluttershy.  If you haven’t noticed by now I’m the shyest of my pony friends.  I may be the shyest and most sensitive, but that doesn’t mean that I’m useless, or... I don’t think I am… *eee*.  Anyway, I’m the pony that helped my friends out by contributing the little wittle bit of wingpower that was needed to get fresh water up to Cloudsdale.  *yay*"),
 	//CMC
-	new Pony("Apple Bloom","RARE","[description]"),
-	new Pony("Sweetie Belle","RARE","[description]"),
-	new Pony("Scootaloo","RARE","[description]"),
+	new Pony("Apple Bloom","RARE","Howdy there!  My name is Apple Bloom and I’m a cute little filly with a pink bow in my hair. I think I look adorable in it!  I have a big sis, a big bro, a granny, and much more family spread all throughout Equestria! I don't have my cutie mark yet, but I'm sure will soon. There's no way my special ingredient pie scheme won't do the trick!"),
+	new Pony("Sweetie Belle","RARE","Sweetie Belle is a sweet little filly who often corrects her friend’s vocabulary and apparently has the largest vocabulary out of the three CMC’s.  This is why she is therefore proclaimed as being a dictionary.  Her and her friends also dream of getting their awesome cutie marks; and hey, maybe they’ll get them in being a pony vector!"),
+	new Pony("Scootaloo","RARE","Wee!  Although she cannot fly (because she is a chicken hehe), she makes use of her wings and is very speedy on her one-of-a-kind scooter!  She especially loves to impress her all time hero Rainbow Dash with her sweet moves!"),
 	new Pony("Babs Seed","RARE","[description]"),
 	//Royalty
-	new Pony("Princess Celestia","ROYALLY RARE","[description]"),
-	new Pony("Princess Luna","ROYALLY RARE","[description]"),
+	new Pony("Princess Celestia","ROYALLY RARE","Ahh the life of being a princess!  I get to lounge around in my castle balcony all day while Twilight and her friends do all of my dirty work.  It gets boring sometimes so I occupy my time by looking out onto other ponies’ lives and seeing what they’re up to.  Oh goodie!  I just saw a mare throw up on her fiancé!"),
+	new Pony("Princess Luna","ROYALLY RARE","Why hello there fellow people.  I am the princess of the night and I once displayed horrifying darkness upon the land of Equestria where my sister and I now rule over.  It is now my duty to go into dreams of little ones and counsel them on how to defeat their deepest of fears."),
 	new Pony("Princess Cadance","ROYALLY RARE","[description]"),
 	new Pony("Shining Armor","ROYALLY RARE","[description]"),
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
+	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I’m in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
 	new Pony("Phi","DIGITALLY RARE","This is Phi, the energetic My Little Game Dev mascot. She likes action games and is always looking for a new challenge."),
 	new Pony("Techna","DIGITALLY RARE","This is Techna, the calm My Little Game Dev mascot. She likes RPGs and puzzles games and enjoys figuring things out.")
 ];
@@ -413,7 +416,7 @@ var ponyCollection = [];//the array that stores which ponies the player has obta
 var pickRandomPony = function(){
 	var ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0;//"random index"
 	if (ri == maxPonies){ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0; }//window.alert("ri = maxPonies!");}
-	// ri = 0;//TEST CODE: make it twi everytime so I can easily test text stuff
+	 // ri = 0;//TEST CODE: make it twi everytime so I can easily test text stuff
 	if (ponyArray[ri]){
 		return new Pony(ponyArray[ri].name, ponyArray[ri].rarity, ponyArray[ri].description);
 	}
@@ -886,9 +889,9 @@ var GameLoop = function(){
 	}
 	modeTime += 1;
 	gLoop = setTimeout(GameLoop, 1000 / 500);
-	ctx.fillText("("+mouseX+", "+mouseY+") "+playerFiring,areaWidth-100+tcx,20);
-	ctx.fillText(gameMode,areaWidth-100+tcx,40);
-	ctx.fillText((cpi+1)+" / "+ponyCollection.length,areaWidth-100+tcx,60);
+	// ctx.fillText("("+mouseX+", "+mouseY+") "+playerFiring,areaWidth-100+tcx,20);
+	// ctx.fillText(gameMode,areaWidth-100+tcx,40);
+	// ctx.fillText((cpi+1)+" / "+ponyCollection.length,areaWidth-100+tcx,60);
 	drawForeGround();
 }
 
@@ -955,8 +958,22 @@ function chest_pony_up(){//he pony moving up out of the chest
 		pwv = 1;
 		switchGameMode("chest_pony_out");
 	}
+	else if (newPony.Y <= chest.getFrontTop()-10){
+		ponySoundChannel = newPony.sound.play();
+	}
 	chest.draw();
+	//draw the pony, but with a mask
+	var nc = document.createElement('canvas');//"new canvas"
+	nc.width  = areaWidth+tcx;
+	nc.height = areaHeight;//chest.getFrontTop();
+	var nctx = nc.getContext('2d');//"new ctx"
+	nctx.fillRect(tcx,0,areaWidth,convertYPos(chest.getFrontTop()));
+	nctx.globalCompositeOperation="source-in";
+	var oldctx = ctx;
+	ctx = nctx;
 	newPony.draw();
+	ctx = oldctx;
+	ctx.drawImage(nc, 0, 0);
 	chest.drawFront();
 };
 // var pimg = new Image();
@@ -992,12 +1009,17 @@ function chest_pony_out(){
 	//ctx.drawImage(pimg, tcx+centerx(pimg), areaHeight - scaley(pimg) - 10, scalex(pimg), scaley(pimg));
 };
 var titleFrame, descFrame, rareFrame;
+var ponySoundChannel;
 function chest_info(){
 	chest.draw();
 	btnNext = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_slide");
 	if (btnNext.checkClick(mouseX, mouseY, playerFiring)){
 		newChest = new Chest();
 		newChest.X = desiredWidth + 10;//start it off screen
+		// if (ponySoundChannel){
+			// ponySoundChannel.stop();
+		// }
+		newPony.sound.pause();
 	}
 	if (newPony.Y < 0){//centerY(newPony.image.height)){
 		newPony.velY = 1;

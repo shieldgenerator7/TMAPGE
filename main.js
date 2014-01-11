@@ -1201,21 +1201,81 @@ function pony_info(){
 // var creditsImg = new Image();
 // creditsImg.src = DIR+"creditPage.png";
 var logoImg = new Image();
-logoImg.src = DIR+"logo.png";
+logoImg.src = DIR+"TMAPGE.png";
 var creditsText = "Hello!";
 {
-creditsText = "created by shieldgenerator7";
+creditsText = "CREATED BY shieldgenerator7\n\n"+
+	
+	"WRITTEN BY\nPheonix Dino\n(and shieldgenerator7)\n\n"+
+	
+	"VECTORED BY\n"+
+	"pikn2\n"+
+	"xPesifeindx\n"+
+	"Nethear\n"+
+	"muzzen\n"+
+	"Takua770\n"+
+	"Tim015\n"+
+	"CherryGrove\n"+
+	"PinkiePie30\n"+
+	"qazwsx302\n"+
+	"uxyd\n"+
+	"monsterhighghoul101\n"+
+	"90Sigma\n"+
+	"alexiy777\n"+
+	"aeroyTechyon-X\n"+
+	"Pheonix Dino\n"+
+	"Wishdream\n"+
+	
+	"\nTYPEFACED BY\n"+
+	"Kiwi Media\n"+
+	"Eliot Truelove\n"+
+	
+	"\nSPECIAL THANKS\n\n"+
+	
+	"FOR SOUND CLIPS\n"+
+	"kyrospawn\n"+
+	"SunnySandStorm\n"+
+	"EpicGteGuy\n"+
+	"Michoss9\n"+
+	"SelfAwarePedant\n"+
+	
+	"\nFOR CODE SNIPPETS\n"+
+	"Binod Suman\n"+
+	"Colin Wiseman\n"+
+	
+	"\nFOR PLAYTESTING\n"+
+	"Pheonix Dino\n"+
+	"Vanni\n"+
+	
+	"\nFOR FLASH PUPPETS\n"+
+	"Zachary Rich and the Double Rainboom team\n"+
+	
+	"\nFOR MLP:FiM\n"+
+	"Lauren Faust\n"+
+	"Hasbro\n"+
+	"DHX\n"+
+	"Studio B\n"+
+	
+	"\nFOR BEING AWESOME\n"+
+	"Jesus\n"+
+	
+	"\nFOR PLAYING THE GAME AND MAKING THIS WHOLE THING WORTHWHILE\n"+
+	"You! Thanks for playing!\n"+
+	
+	"\nDECEMBER 2013 - JANUARY 2014 shieldgenerator7\nMade for the MLGD Mareathon Part 2\n"+
+	"\n\n\n#NoSkinnerBoxes";
 }
-var credFrame = new TextFrame(creditsText,"button_clear",0,desiredHeight-200);
+var credFrame = new TextFrame(creditsText,"credFrame",0,desiredHeight-200);
 function setUpCredits(){
 	credFrame = new TextFrame(creditsText,"button_clear",0,desiredHeight-200);
 }
 function credits(){//FUTURE CODE: need to make this text instead of image and have it scroll
-	credFrame.Y -= 5;
+	credFrame.Y -= 1;
 	// ctx.fillText("\"PINKIE OR NOT PINKIE\"\nshieldgenerator7\n\nWith vectors from\n\n"
 	// +"Based on\nMy Little Pony: Friendship is Magic\nSeason 3 Episode 3: \"Too Many Pinkies\"",100,100);
 	// ctx.drawImage(creditsImg, 10, 10, width - 20, height - 70);
-	ctx.drawImage(logoImg, 442, credFrame-160-20, 317, 160);
+	ctx.drawImage(logoImg, convertXPos(centerX(logoImg.width)), convertYPos(credFrame.Y-logoImg.height+40), convertWidth(logoImg.width),convertHeight(logoImg.height));
+	//ctx.drawImage(logoImg, 442, credFrame.Y-160-20, 317, 160);
 	var mainMenu = new Button("button_title", 5, 5, "title_screen");
 	if (mainMenu.checkClick(mouseX, mouseY, playerFiring)){
 		playerFired = true;
@@ -1225,6 +1285,9 @@ function credits(){//FUTURE CODE: need to make this text instead of image and ha
 	// ctx.font = "30px";
 	// ctx.fillStyle = "#EE4F91";
 	// ctx.fillText("Praise the Lord!  /)",width/2 - 50, 19);
+	if (wrapTextData.bottom < 0){//if credits go all the way to the top
+		switchGameMode("title_screen");
+	}
 }
 
 ////

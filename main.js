@@ -1201,7 +1201,7 @@ function pony_info(){
 // var creditsImg = new Image();
 // creditsImg.src = DIR+"creditPage.png";
 var logoImg = new Image();
-logoImg.src = DIR+"TMAPGE.png";
+logoImg.src = DIR+"tmapge.png";
 var creditsText = "Hello!";
 {
 creditsText = "CREATED BY shieldgenerator7\n\n"+

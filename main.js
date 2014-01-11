@@ -403,6 +403,7 @@ var ponyArray = [
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
 	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I'm in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
+	new Pony("Skinner Box","CREEPILY COMMON","So I heard you like to play games? Well, I have a game for you. Here, press this button. Press it again. It's a game. It's not fun, but it's addicting. Why would you want a game to be fun... when you can want a game to be addicting? WoW. This game IS addicting. Heh Heh."),
 	new Pony("Phi","DIGITALLY RARE","This is Phi, the energetic My Little Game Dev mascot. She likes action games and is always looking for a new challenge."),
 	new Pony("Techna","DIGITALLY RARE","This is Techna, the calm My Little Game Dev mascot. She likes RPGs and puzzles games and enjoys figuring things out.")
 ];
@@ -983,7 +984,7 @@ function title_screen(){//title screen
 	var btnPlay = new Button("button_tmapge", 0, 0, "chest_inactive");
 	// var btnCredits = new Button("credits", width/2, height/2 + 50, "credits");
 	// var btnInfo = new Button("howToPlay", 200, 200, "info");
-	if (btnPlay.checkClick(mouseX, mouseY, playerFiring)){
+	if (!playerFired && btnPlay.checkClick(mouseX, mouseY, playerFiring)){
 		setUp();
 	}
 	// else if (btnCredits.checkClick(mouseX, mouseY, playerFiring)){
@@ -1000,7 +1001,9 @@ function title_screen(){//title screen
 var chest = new Chest();
 function chest_inactive(){
 	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_opening");
-	btnPony = new Button ("button_pony",0,0,"pony_info");
+	btnPony = new Button ("button_pony",215,5,"pony_info");
+	btnTitle = new Button ("button_title",5,5,"title_screen");	
+	btnCredits = new Button ("button_credits",110,5,"credits");
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
 	}
@@ -1008,10 +1011,19 @@ function chest_inactive(){
 		playerFired = true;
 		setUpPonyInfo();
 	}
+	else if (!playerFired && btnTitle.checkClick(mouseX, mouseY, playerFiring)){
+		playerFired = true;
+	}
+	else if (!playerFired && btnCredits.checkClick(mouseX, mouseY, playerFiring)){
+		setUpCredits();
+		playerFired = true;
+	}
 	btnOpen.draw();//this button doesn't appear on screen, it's just an overlay
 	if (ponyCollection.length > 0){
 		btnPony.draw();
 	}
+	btnTitle.draw();
+	btnCredits.draw();
 	chest.draw();//draw the whole chest
 	//numFrame.draw();
 };
@@ -1154,7 +1166,7 @@ function pony_info(){
 		
 	btnLeft = new Button ("arrow_left",0,desiredHeight/2-160,0);
 	btnRight = new Button ("arrow_right",desiredWidth - 100,desiredHeight/2-160,0);
-	btnChest = new Button("button_pony",0,0,"chest_inactive");
+	btnChest = new Button("button_chestT",5,105,"chest_inactive");
 	//the following two controls may seem switched, but that's just to create the illusion that the newest pony is the first in the list (when internally it's the last)
 	if (cpi < (ponyCollection.length - 1) && !playerFired && btnLeft.checkClick(mouseX, mouseY, playerFiring)){
 		cpi += 1;
@@ -1190,19 +1202,29 @@ function pony_info(){
 // creditsImg.src = DIR+"creditPage.png";
 var logoImg = new Image();
 logoImg.src = DIR+"logo.png";
+var creditsText = "Hello!";
+{
+creditsText = "created by shieldgenerator7";
+}
+var credFrame = new TextFrame(creditsText,"button_clear",0,desiredHeight-200);
+function setUpCredits(){
+	credFrame = new TextFrame(creditsText,"button_clear",0,desiredHeight-200);
+}
 function credits(){//FUTURE CODE: need to make this text instead of image and have it scroll
+	credFrame.Y -= 5;
 	// ctx.fillText("\"PINKIE OR NOT PINKIE\"\nshieldgenerator7\n\nWith vectors from\n\n"
 	// +"Based on\nMy Little Pony: Friendship is Magic\nSeason 3 Episode 3: \"Too Many Pinkies\"",100,100);
 	// ctx.drawImage(creditsImg, 10, 10, width - 20, height - 70);
-	ctx.drawImage(logoImg, 442, 37, 317, 160);
-	var mainMenu = new Button("main_menu", 10, height-50-9, "title_screen");
+	ctx.drawImage(logoImg, 442, credFrame-160-20, 317, 160);
+	var mainMenu = new Button("button_title", 5, 5, "title_screen");
 	if (mainMenu.checkClick(mouseX, mouseY, playerFiring)){
-		//switchGame
+		playerFired = true;
 	}
 	mainMenu.draw();
-	ctx.font = "30px";
-	ctx.fillStyle = "#EE4F91";
-	ctx.fillText("Praise the Lord!  /)",width/2 - 50, 19);
+	credFrame.draw();
+	// ctx.font = "30px";
+	// ctx.fillStyle = "#EE4F91";
+	// ctx.fillText("Praise the Lord!  /)",width/2 - 50, 19);
 }
 
 ////

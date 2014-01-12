@@ -415,6 +415,11 @@ for (var i = 0; i < maxPonies; i++){
 var ponyCollection = [];//the array that stores which ponies the player has obtained
 
 var pickRandomPony = function(){
+	if (forcedPony){
+		var pony = forcedPony;
+		forcedPony = 0;
+		return pony;
+	}
 	var ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0;//"random index"
 	if (ri == maxPonies){ri = Math.floor(Math.random() * ((maxPonies) - 0 + 1)) + 0; }//window.alert("ri = maxPonies!");}
 	 // ri = 0;//TEST CODE: make it twi everytime so I can easily test text stuff
@@ -877,18 +882,36 @@ var laser = new Laser();*/
 // var railgunsound=createsoundbite("railgun_sound.wav");
 //Brad: end code for railgun sound
 
-// document.addEventListener('keydown', function(event) {
-    // if(event.keyCode == 40) {
-		// Movin' on up...
-		// yPos = yPos + 5;
-        // player.setPosition(15, yPos);
-    // }
-    // else if(event.keyCode == 38) {
-		// Goin' down...
-		// yPos = yPos - 5;
-        // player.setPosition(15, yPos);
-    // }
-// });
+document.onkeydown = function(e){
+	e.stopPropagation();
+	if ((e.keyCode==8)){
+		return false;
+	}
+}
+
+var keyPressed = false;
+document.addEventListener('keydown', function(event) {
+	if (event.keyCode == 13){//enter key was pressed
+		keyValue = 13;
+		keyPressed = true;
+	}
+	else if (event.keyCode == 8){
+		keyValue = 8;
+		keyPressed = true;
+	}
+});
+
+document.addEventListener('keyup', function(event) {
+    keyPressed = false;
+});
+
+var keyValue = "0";
+document.addEventListener('keypress', function(event) {    
+	if (event.which!=0 && event.charCode!=0&&keyPressed==false){
+		keyValue = String.fromCharCode(event.charCode);
+		keyPressed = true;
+	}
+});
 
 c.addEventListener('mousemove', function(e){
 		mouseX = e.pageX;
@@ -1004,6 +1027,7 @@ function chest_inactive(){
 	btnPony = new Button ("button_pony",215,5,"pony_info");
 	btnTitle = new Button ("button_title",5,5,"title_screen");	
 	btnCredits = new Button ("button_credits",110,5,"credits");
+	btnTri = new Button("button_triangle",desiredWidth-114,desiredHeight-165,0);
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
 	}
@@ -1018,14 +1042,21 @@ function chest_inactive(){
 		setUpCredits();
 		playerFired = true;
 	}
+	else if (!playerFired && btnTri.checkClick(mouseX,mouseY,playerFiring)){
+		playerFired = true;
+		openTextBox();
+	}
 	btnOpen.draw();//this button doesn't appear on screen, it's just an overlay
 	if (ponyCollection.length > 0){
 		btnPony.draw();
 	}
 	btnTitle.draw();
 	btnCredits.draw();
+	btnTri.draw();
 	chest.draw();//draw the whole chest
-	//numFrame.draw();
+	if (textBoxOpened){
+		evaluateTextBox();
+	}
 };
 function chest_opening(){
 	if (chest.atLastFrame()){
@@ -1223,6 +1254,7 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"90Sigma\n"+
 	"alexiy777\n"+
 	"aeroyTechyon-X\n"+
+	"Mozlin\n"+
 	"Pheonix Dino\n"+
 	"Wishdream\n"+
 	
@@ -1237,6 +1269,7 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"SunnySandStorm\n"+
 	"EpicGteGuy\n"+
 	"Michoss9\n"+
+	"Frozen Pony\n"+
 	"SelfAwarePedant\n"+
 	
 	"\nFOR CODE SNIPPETS\n"+
@@ -1467,5 +1500,54 @@ function credits(){//FUTURE CODE: need to make this text instead of image and ha
 ////
 
 //setUp();
+var forcedPony = 0;
+forceNextPony = function(pony){
+	forcedPony = pony;
+}
 
+var TextBuilder = function(){//copied from highScoreTable() from main.js from ShiftItOneAndUp(Railguns and Dragons)
+	var that = this;
+	that.buildName = "";
+	// that.buildNameCount = 0;//the limit is 16
+	
+	that.acceptKeys = function(charN){//returns true when input line is finished
+		if (charN == 13 || that.buildName.length >= 20){//enter keyCode passed through
+			return true;
+		}
+		else if (charN == 8 && that.buildName.length > 0){
+			that.buildName = that.buildName.substr(0,that.buildName.length-1);
+		}
+		else {
+			that.buildName += charN;
+		}
+	}
+};
+var textBuilder = new TextBuilder();
+
+var textFrame = new TextFrame("","textFrame",50,desiredHeight - 200);
+var textBoxOpened = false;
+function openTextBox(){
+	textFrame = new TextFrame("","textFrame",50,desiredHeight - 200);
+	textBuilder = new TextBuilder();
+	textBoxOpened = true;
+}
+var charUsed = false;
+function evaluateTextBox(){
+	if (!charUsed){
+		if (keyPressed){
+			if (textBuilder.acceptKeys(keyValue)){
+				if (textBuilder.buildName == "#PinkieSecretService"){
+					forceNextPony(new Pony("Pinkie Spy","Invisibly Rare","Shhh! I'm on a mission! How can you see me anyways? I'm wearing night vision goggles! You mean you can see? You mean I'm not invisible? Hey...! They told me this would make me invisible! I want my bits back!"));
+				}
+				textBoxOpened = false;
+			}
+			textFrame.text = textBuilder.buildName;
+			charUsed = true;
+		}
+	}
+	else if (!keyPressed){
+		charUsed = false;
+	}
+	textFrame.draw();
+}
 GameLoop();

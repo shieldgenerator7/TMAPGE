@@ -829,81 +829,116 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
         }
      }
 
-function SpecialEffect(filename,x,y,width,height){
+function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Particle
+	var that = this;
+	
+	that.particleArray = new Array();//[new Particle(filename,0,0)];
+	
+	that.markForDeletion = false;	
+	
+	that.filename = filename;
+	that.width = width;
+	that.height = height; 
+	that.frames = 0;
+	that.actualFrame = 0;
+	that.X = x;//Math.floor(Math.random() * (max - min + 1)) + min;
+	that.Y = y;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
+	// that.velX = 0;//used for moving
+	// that.velY = 0;
+	
+	that.evaluate = function(){
+		for (var i=0; i < that.particleArray.length-1;i++){
+			var p = that.particleArray[i];
+			p.evaluate();
+			if (p.markForDeletion){
+				that.particleArray.splice(i,1);
+			}
+		}
+		var rx = Math.floor(Math.random() * ((that.X+that.width) - that.X + 1)) + that.X;
+		var ry = Math.floor(Math.random() * ((that.Y+that.height) - that.Y + 1)) + that.Y;
+		that.particleArray.push(new Particle(that.filename,rx,ry));
+	}
+				
+	that.setPosition = function(x, y){
+		that.X = x;
+		that.Y = y;
+	}
+	
+	
+	that.getBottom = function(){//returns the bottom y value
+		return that.Y + that.image.height;
+	}
+	// this makes the pony move based on its direction
+	// that.move = function(){
+		// that.X += that.velX;
+		// that.Y += that.velY;
+	// }	
+	
+	//Function called when it disappears
+	that.remove = function(){
+		that.markForDeletion = true;
+	}
+
+	that.draw = function(){
+		if (!that.markForDeletion){
+			for (var i=0; i < that.particleArray.length-1;i++){
+				that.particleArray[i].draw();
+			}
+		}
+		// ctx.fillText("Special Effect Class",tcx,0);
+	}
 }
 
-function Particle(filename, x, y){
+function Particle(filename, x, y){//1-12-2013 copied from Pony class
 	var that = this;
 	
 	that.image = new Image();
-	that.markForDeletion = false;
-	
-	
+	that.markForDeletion = false;	
 
 	that.image = showImage(DIR+filename+".png");
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	that.frames = 0;
 	that.actualFrame = 0;
-	that.X = 0;//Math.floor(Math.random() * (max - min + 1)) + min;
-	that.Y = desiredHeight - that.image.height;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
-	that.velX = 0;//used for moving
-	that.velY = 0;
+	that.X = x;//Math.floor(Math.random() * (max - min + 1)) + min;
+	that.Y = y;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
+	// that.velX = 0;//used for moving
+	// that.velY = 0;
+	that.scale = 0.0;
+	that.maxScale = 1;
+	that.velZ = 0.035;//amount that it grows or shrinks
 	
-	that.sound = new Audio(PONY_DIR+name+".mp3");
-			
+	that.evaluate = function(){
+		that.scale += that.velZ;
+		if (that.scale >= that.maxScale){
+			that.velZ = -0.035;
+		}
+		else if (that.scale <= 0 && that.velZ < 0){
+			that.remove();
+		}
+	}
+	
+	that.shift = function(x,y){
+		that.X += x;
+		that.Y += y;
+	}
+				
 	that.setPosition = function(x, y){
 		that.X = x;
 		that.Y = y;
 	}
-	//returns the pony's index number + 1
-	that.getNumber = function(){
-		return that.index + 1;
-	}
-	// this method checks to see if this pony has been clicked on
-	that.checkClick = function(x, y){
-		if (!that.markForDeletion){//if pony is still alive
-			if (x > that.X){//mouse-pony collision detection
-				if (x < that.X + that.width){
-					if (y > that.Y){
-						if (y < that.Y + that.height){
-								return that.onClick();//it has been clicked on, and activated
-						}
-					}
-				}
-			}
-		}
-		return false;//pony is not clicked on
-	}
-	//Carry out onClick operations, depending on game state
-	that.onClick = function(){
-	//returns true as default unless otherwise specified
-		switch (gameMode){
-			case "play": 
-				that.hit(); 
-				break;
-			case "chooseSave": that.capture(); break;
-		}
-		return true;
-	}
+	
+	
 	that.getBottom = function(){//returns the bottom y value
 		return that.Y + that.image.height;
 	}
 	// this makes the pony move based on its direction
-	that.move = function(){
-		that.X += that.velX;
-		that.Y += that.velY;
-	}
-	that.slideOff = function(){
-		that.velX = -10;
-		that.velY = 0;
-		that.move();
-	}
-	that.isOffScreen = function(){//only determines if off left edge
-		return that.X + that.image.width < 0;
-	}
+	// that.move = function(){
+		// that.X += that.velX;
+		// that.Y += that.velY;
+	// }	
 	
-	//Function called when hit with magic blast
+	//Function called when it disappears
 	that.remove = function(){
 		that.markForDeletion = true;
 	}
@@ -911,16 +946,16 @@ function Particle(filename, x, y){
 	//that.interval = 0;
 	that.draw = function(){
 		if (!that.markForDeletion){
-			if (that.velX == 0){
-				that.X = centerX(that.image.width);
-			}
 			try {
+				var width = that.image.width * that.scale;
+				var height = that.image.height * that.scale;
 				ctx.drawImage(that.image, 
 				//0, that.height * that.actualFrame, that.width, that.height, 
-				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
+				convertXPos(that.X - width/2), convertYPos(that.Y - height/2), convertWidth(width), convertHeight(height));
+				// convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
 				// ctx.fillStyle = 'black';
 				// ctx.font="20px Arial";
-				// ctx.fillText(that.getNumber(), that.X, that.Y + that.height);
+				// ctx.fillText("P", convertXPos(that.X), convertYPos(that.Y));
 			}
 			catch (e) {
 			};
@@ -937,40 +972,6 @@ function Particle(filename, x, y){
 			// that.interval++;	
 		}
 	}
-	that.drawScale = function(nW, nH){//"new width", "new height"
-		var newWidth = nW,
-		newHeight = nH;
-		if (newWidth != 0 || newHeight != 0){
-			if (newHeight == 0){//scale the image to the new width
-				newHeight = newWidth/that.image.width*that.image.height;
-				//image.width = newWidth;
-			}
-			else if (newWidth == 0){//scale the image to the new height
-				newWidth = newHeight/that.image.height*that.image.width;
-				//image.height = newHeight;
-			}
-			//else just set the new dimensions
-				// image.width = newWidth;
-				// image.height = newHeight;
-			
-		}
-		else {
-			newWidth = that.image.width;
-			newHeight = that.image.height;
-		}
-		if (!that.markForDeletion){
-			// try {
-				ctx.drawImage(that.image, 
-				//0, that.height * that.actualFrame, that.width, that.height, 
-				convertXPos(centerX(newWidth)), convertYPos(that.Y), convertWidth(newWidth), convertHeight(newHeight));
-			// }
-			// catch (e) {
-			// };		
-		}
-	}
-		
-	//ponyArray.push(that);
-	// howManyPinkies += 1;
 }
 	 
 /*
@@ -1106,6 +1107,7 @@ function setUp(){
 		pony.markForDeletion = false;
 		pony.index = i;
 	}
+	sparkleEffect = new SpecialEffect("sparkle",0,0,desiredWidth,desiredHeight);
 	numberText = 0;
 	//Player
 	playerFiring = false;
@@ -1165,6 +1167,7 @@ function title_screen(){//title screen
 	ctx.fillText("#MLGDMarathon December 2013", 5 + tcx, areaHeight - 20);
 }
 var chest = new Chest();
+var sparkleEffect;//of type SpecialEffect
 function chest_inactive(){
 	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_opening");
 	btnPony = new Button ("button_pony",215,5,"pony_info");
@@ -1197,6 +1200,8 @@ function chest_inactive(){
 	btnCredits.draw();
 	btnTri.draw();
 	chest.draw();//draw the whole chest
+	sparkleEffect.evaluate();
+	sparkleEffect.draw();
 	if (textBoxOpened){
 		evaluateTextBox();
 	}

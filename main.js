@@ -829,7 +829,150 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, centerText) {
         }
      }
 
+function SpecialEffect(filename,x,y,width,height){
+}
 
+function Particle(filename, x, y){
+	var that = this;
+	
+	that.image = new Image();
+	that.markForDeletion = false;
+	
+	
+
+	that.image = showImage(DIR+filename+".png");
+	that.width = imgWidth;
+	that.height = imgHeight; 
+	that.frames = 0;
+	that.actualFrame = 0;
+	that.X = 0;//Math.floor(Math.random() * (max - min + 1)) + min;
+	that.Y = desiredHeight - that.image.height;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
+	that.velX = 0;//used for moving
+	that.velY = 0;
+	
+	that.sound = new Audio(PONY_DIR+name+".mp3");
+			
+	that.setPosition = function(x, y){
+		that.X = x;
+		that.Y = y;
+	}
+	//returns the pony's index number + 1
+	that.getNumber = function(){
+		return that.index + 1;
+	}
+	// this method checks to see if this pony has been clicked on
+	that.checkClick = function(x, y){
+		if (!that.markForDeletion){//if pony is still alive
+			if (x > that.X){//mouse-pony collision detection
+				if (x < that.X + that.width){
+					if (y > that.Y){
+						if (y < that.Y + that.height){
+								return that.onClick();//it has been clicked on, and activated
+						}
+					}
+				}
+			}
+		}
+		return false;//pony is not clicked on
+	}
+	//Carry out onClick operations, depending on game state
+	that.onClick = function(){
+	//returns true as default unless otherwise specified
+		switch (gameMode){
+			case "play": 
+				that.hit(); 
+				break;
+			case "chooseSave": that.capture(); break;
+		}
+		return true;
+	}
+	that.getBottom = function(){//returns the bottom y value
+		return that.Y + that.image.height;
+	}
+	// this makes the pony move based on its direction
+	that.move = function(){
+		that.X += that.velX;
+		that.Y += that.velY;
+	}
+	that.slideOff = function(){
+		that.velX = -10;
+		that.velY = 0;
+		that.move();
+	}
+	that.isOffScreen = function(){//only determines if off left edge
+		return that.X + that.image.width < 0;
+	}
+	
+	//Function called when hit with magic blast
+	that.remove = function(){
+		that.markForDeletion = true;
+	}
+
+	//that.interval = 0;
+	that.draw = function(){
+		if (!that.markForDeletion){
+			if (that.velX == 0){
+				that.X = centerX(that.image.width);
+			}
+			try {
+				ctx.drawImage(that.image, 
+				//0, that.height * that.actualFrame, that.width, that.height, 
+				convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
+				// ctx.fillStyle = 'black';
+				// ctx.font="20px Arial";
+				// ctx.fillText(that.getNumber(), that.X, that.Y + that.height);
+			}
+			catch (e) {
+			};
+
+			// if (that.interval == 4 ) {
+				// if (that.actualFrame == that.frames) { 
+					// that.actualFrame = 0;
+				// }
+				// else {
+					// that.actualFrame++;
+				// }
+				// that.interval = 0;
+			// }
+			// that.interval++;	
+		}
+	}
+	that.drawScale = function(nW, nH){//"new width", "new height"
+		var newWidth = nW,
+		newHeight = nH;
+		if (newWidth != 0 || newHeight != 0){
+			if (newHeight == 0){//scale the image to the new width
+				newHeight = newWidth/that.image.width*that.image.height;
+				//image.width = newWidth;
+			}
+			else if (newWidth == 0){//scale the image to the new height
+				newWidth = newHeight/that.image.height*that.image.width;
+				//image.height = newHeight;
+			}
+			//else just set the new dimensions
+				// image.width = newWidth;
+				// image.height = newHeight;
+			
+		}
+		else {
+			newWidth = that.image.width;
+			newHeight = that.image.height;
+		}
+		if (!that.markForDeletion){
+			// try {
+				ctx.drawImage(that.image, 
+				//0, that.height * that.actualFrame, that.width, that.height, 
+				convertXPos(centerX(newWidth)), convertYPos(that.Y), convertWidth(newWidth), convertHeight(newHeight));
+			// }
+			// catch (e) {
+			// };		
+		}
+	}
+		
+	//ponyArray.push(that);
+	// howManyPinkies += 1;
+}
+	 
 /*
 	that.draw = function(){
 			try {
@@ -1134,7 +1277,7 @@ var ponySoundChannel;
 function chest_info(){
 	chest.draw();
 	//numFrame.draw();
-	btnNext = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_slide");
+	btnNext = new Button ("button_chest_open",chest.X-33,chest.Y-325,"chest_slide");
 	if (btnNext.checkClick(mouseX, mouseY, playerFiring)){
 		newChest = new Chest();
 		newChest.X = desiredWidth + centerX(chest.image.width);//start it off screen

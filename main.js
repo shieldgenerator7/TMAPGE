@@ -178,6 +178,8 @@ function Button(text, x, y, modeTo){
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	
+	var overImg = showImage(DIR+text+"_over.png");//used just to preload the over image
+	
 	that.X = x;
 	that.Y = y;
 	that.text = text;
@@ -394,12 +396,12 @@ var ponyArray = [
 	new Pony("Apple Bloom","RARE","Howdy there!  My name is Apple Bloom and I'm a cute little filly with a pink bow in my hair. I think I look adorable in it!  I have a big sis, a big bro, a granny, and much more family spread all throughout Equestria! I don't have my cutie mark yet, but I'm sure will soon. There's no way my special ingredient pie scheme won't do the trick!"),
 	new Pony("Sweetie Belle","RARE","Sweetie Belle is a sweet little filly who often corrects her friend's vocabulary and apparently has the largest vocabulary out of the three CMC's.  This is why she is therefore proclaimed as being a dictionary.  Her and her friends also dream of getting their awesome cutie marks; and hey, maybe they'll get them in being a pony vector!"),
 	new Pony("Scootaloo","RARE","Wee!  Although she cannot fly (because she is a chicken hehe), she makes use of her wings and is very speedy on her one-of-a-kind scooter!  She especially loves to impress her all time hero Rainbow Dash with her sweet moves!"),
-	new Pony("Babs Seed","RARE","[description]"),
+	new Pony("Babs Seed","RARE","A small little filly from Manehatten that is soon to start her own branch of the CMCs in Manehatten. She also almost fell out of a golden apple and into a mud puddle."),
 	//Royalty
 	new Pony("Princess Celestia","ROYALLY RARE","Ahh the life of being a princess!  I get to lounge around in my castle balcony all day while Twilight and her friends do all of my dirty work.  It gets boring sometimes so I occupy my time by looking out onto other ponies' lives and seeing what they're up to. Oh goodie!  I just saw a mare throw up on her fiance!"),
 	new Pony("Princess Luna","ROYALLY RARE","Why hello there fellow people.  I am the princess of the night and I once displayed horrifying darkness upon the land of Equestria where my sister and I now rule over.  It is now my duty to go into dreams of little ones and counsel them on how to defeat their deepest of fears."),
-	new Pony("Princess Cadance","ROYALLY RARE","[description]"),
-	new Pony("Shining Armor","ROYALLY RARE","[description]"),
+	new Pony("Princess Cadance","ROYALLY RARE","This is her majesty Princess Cadance of the Crystal Empire.  She once had to defeat an \"evil twin\" who was later found out to be Queen of the Changlings."),
+	new Pony("Shining Armor","ROYALLY RARE","Twilight's faithful brother who marries Princess Cadance and then becomes not only Captain of the Royal Guard, but also the Prince of the Crystal Kingdom."),
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
 	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I'm in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
@@ -481,14 +483,30 @@ function Chest(){//Chest class
 	that.numFrame.centerable = true;
 	that.numFrame.drawImageLast = true;
 	that.numFrame.textFont = "#827741";
-			
+	
+	//that.sparkleEffect moved below because it required other methods
+				
 	that.setPosition = function(x, y){
 		that.X = x;
 		that.Y = y;
 	}
+	that.getTop = function(){//get the actual top where the back part of the chest is located
+		return that.Y - (that.height - that.frontImage.height);
+	}
+	that.getStateTop = function(){//get the top of the back part depending on what state it is (open or closed)
+		if (that.actualFrame == 0){
+			return that.getTop() + 99;
+		}
+		else {
+			return that.getTop();
+		}
+	}
 	that.getFrontTop = function(){
 		return that.Y;// + (that.width/2);//FUTURE CODE: implement this better
 	}
+	
+	that.sparkleEffect = new SpecialEffect("sparkle",that.X,that.getStateTop(),that.width,that.frontImage.height+(that.Y-that.getStateTop()));
+	
 	that.playAnimation = function(){
 		that.animateOpening = true;//FUTURE CODE: use animateOpening in draw routine
 	}
@@ -519,13 +537,16 @@ function Chest(){//Chest class
 		}
 		try {
 			ctx.drawImage(that.image, 
-			that.width * that.actualFrame, 0, that.width, that.height, 
-			convertXPos(that.X), convertYPos(that.Y - (that.height - that.frontImage.height)), convertWidth(that.width), convertHeight(that.height));
+			that.width * that.actualFrame, 0, that.width, that.height, //that.Y - (that.height - that.frontImage.height)
+			convertXPos(that.X), convertYPos(that.getTop()), convertWidth(that.width), convertHeight(that.height));
 			that.numFrame.X = that.X+(that.width-that.numFrame.image.width)/2;
 			that.numFrame.draw();
 			// ctx.fillStyle = 'black';
 			// ctx.font="20px Arial";
 			// ctx.fillText(that.getNumber(), that.X, that.Y + that.height);
+			that.sparkleEffect.defineArea(that.X,that.getStateTop(),that.width,that.frontImage.height+(that.Y-that.getStateTop()));//chest.X,chest.Y-131,chest.width,chest.image.height);
+			that.sparkleEffect.evaluate();
+			that.sparkleEffect.draw();
 		}
 		catch (e) {
 		};
@@ -554,8 +575,13 @@ function Chest(){//Chest class
 		try {
 			ctx.drawImage(that.frontImage, 
 			convertXPos(that.X), convertYPos(that.Y), convertWidth(that.width), convertHeight(that.frontImage.height));
+			//numFrame
 			that.numFrame.X = that.X+(that.width-that.numFrame.image.width)/2;
 			that.numFrame.draw();
+			//sparkleEffect
+			that.sparkleEffect.defineArea(that.X,that.getStateTop(),that.width,that.frontImage.height+(that.Y-that.getStateTop()));//chest.X,chest.Y-131,chest.width,chest.image.height);
+			that.sparkleEffect.evaluate();
+			that.sparkleEffect.draw();
 			}
 			catch (e) {
 			};
@@ -835,6 +861,7 @@ function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Partic
 	that.particleArray = new Array();//[new Particle(filename,0,0)];
 	
 	that.markForDeletion = false;	
+	that.makeNewParticles = 1;
 	
 	that.filename = filename;
 	that.width = width;
@@ -843,9 +870,17 @@ function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Partic
 	that.actualFrame = 0;
 	that.X = x;//Math.floor(Math.random() * (max - min + 1)) + min;
 	that.Y = y;//Math.floor(Math.random() * (max - min + 1)) + min;//randomize y value on initialization
-	// that.velX = 0;//used for moving
-	// that.velY = 0;
+	that.velX = 0;//used for moving
+	that.velY = 0;
 	
+	that.defineArea = function(x,y,width,height){
+		that.X = x;
+		that.Y = y;
+		that.width = width;
+		that.height = height; 
+	}
+	
+	that.interval = 0;
 	that.evaluate = function(){
 		for (var i=0; i < that.particleArray.length-1;i++){
 			var p = that.particleArray[i];
@@ -854,9 +889,15 @@ function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Partic
 				that.particleArray.splice(i,1);
 			}
 		}
-		var rx = Math.floor(Math.random() * ((that.X+that.width) - that.X + 1)) + that.X;
-		var ry = Math.floor(Math.random() * ((that.Y+that.height) - that.Y + 1)) + that.Y;
-		that.particleArray.push(new Particle(that.filename,rx,ry));
+		if (that.interval == 0){
+			for (var i = 0; i < that.makeNewParticles; i++){
+				var rx = Math.floor(Math.random() * ((that.X+that.width) - that.X + 1)) + that.X;
+				var ry = Math.floor(Math.random() * ((that.Y+that.height) - that.Y + 1)) + that.Y;
+				that.particleArray.push(new Particle(that.filename,rx,ry));
+			}
+			that.interval = 4;
+		}
+		else {that.interval -= 1;}
 	}
 				
 	that.setPosition = function(x, y){
@@ -864,15 +905,22 @@ function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Partic
 		that.Y = y;
 	}
 	
+	that.end = function(){
+		that.makeNewParticles = 0;
+	}
 	
 	that.getBottom = function(){//returns the bottom y value
 		return that.Y + that.image.height;
 	}
+	that.setVelocity = function(dx,dy){
+		that.velX = dx;
+		that.velY = dy;
+	}
 	// this makes the pony move based on its direction
-	// that.move = function(){
-		// that.X += that.velX;
-		// that.Y += that.velY;
-	// }	
+	that.move = function(){
+		that.X += that.velX;
+		that.Y += that.velY;
+	}	
 	
 	//Function called when it disappears
 	that.remove = function(){
@@ -885,6 +933,17 @@ function SpecialEffect(filename,x,y,width,height){//copied 1-12-2014 from Partic
 				that.particleArray[i].draw();
 			}
 		}
+		// ctx.save();
+		// ctx.strokeStyle = "black";
+		// ctx.lineWidth = 2;
+		// var x = convertXPos(that.X), y = convertYPos(that.Y), width = convertWidth(that.width), height = convertHeight(that.height);
+		// ctx.moveTo(x, y);
+		// ctx.lineTo(x+width, y);
+		// ctx.lineTo(x+width, y+height);
+		// ctx.lineTo(x, y+height);
+		// ctx.lineTo(x, y);
+		// ctx.stroke();
+		// ctx.restore();
 		// ctx.fillText("Special Effect Class",tcx,0);
 	}
 }
@@ -1107,7 +1166,6 @@ function setUp(){
 		pony.markForDeletion = false;
 		pony.index = i;
 	}
-	sparkleEffect = new SpecialEffect("sparkle",0,0,desiredWidth,desiredHeight);
 	numberText = 0;
 	//Player
 	playerFiring = false;
@@ -1167,7 +1225,6 @@ function title_screen(){//title screen
 	ctx.fillText("#MLGDMarathon December 2013", 5 + tcx, areaHeight - 20);
 }
 var chest = new Chest();
-var sparkleEffect;//of type SpecialEffect
 function chest_inactive(){
 	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_opening");
 	btnPony = new Button ("button_pony",215,5,"pony_info");
@@ -1176,6 +1233,7 @@ function chest_inactive(){
 	btnTri = new Button("button_triangle",desiredWidth-114,desiredHeight-165,0);
 	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
+		chest.sparkleEffect.end();
 	}
 	else if (ponyCollection.length > 0 && !playerFired && btnPony.checkClick(mouseX, mouseY, playerFiring)){
 		playerFired = true;
@@ -1200,8 +1258,9 @@ function chest_inactive(){
 	btnCredits.draw();
 	btnTri.draw();
 	chest.draw();//draw the whole chest
-	sparkleEffect.evaluate();
-	sparkleEffect.draw();
+	// sparkleEffect.X = chest.X;sparkleEffect.Y = chest.Y-131;sparkleEffect.width=chest.width;sparkleEffect.height=chest.image.height;
+	// sparkleEffect.evaluate();
+	// sparkleEffect.draw();
 	if (textBoxOpened){
 		evaluateTextBox();
 	}

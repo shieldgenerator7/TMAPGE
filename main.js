@@ -402,6 +402,17 @@ var ponyArray = [
 	new Pony("Princess Luna","ROYALLY RARE","Why hello there fellow people.  I am the princess of the night and I once displayed horrifying darkness upon the land of Equestria where my sister and I now rule over.  It is now my duty to go into dreams of little ones and counsel them on how to defeat their deepest of fears."),
 	new Pony("Princess Cadance","ROYALLY RARE","This is her majesty Princess Cadance of the Crystal Empire.  She once had to defeat an \"evil twin\" who was later found out to be Queen of the Changlings."),
 	new Pony("Shining Armor","ROYALLY RARE","Twilight's faithful brother who marries Princess Cadance and then becomes not only Captain of the Royal Guard, but also the Prince of the Crystal Kingdom."),
+	//Villians
+	new Pony("Discord","CHAOTICALLY UNCOMMON","Mwahaha!  Chaos is such a wonderful place to live in!  Too bad Celestia and her friends had to ruin it for me.  I am the master of all things chaos and if you're not careful, I just might make your life chaotic as well by making you addicted to this pony game mwahaha!"),
+	//Background
+	new Pony("Vinyl Scratch","RADICALLY RARE","WUB! WUB! WUB! WUB!  I love my music wubs!  Dubstep is the stuff!  Who am I?  I'm the master of mixing up music yeah baby!"),
+	new Pony("Octavia Melody","RARE","Oh hello there my fellow game players.  As you all know I am Octavia and I am the most appealing Cello player.  I apologize for making my introduction short, however I must get downstairs immediately otherwise Vinyl Scratch just may bust out the windows with her Wub Dishwasher!  Goodbye!"),
+	new Pony("Dr. Hooves","INTERTEMPORALLY RARE","Oh now this is rather odd don't you think Miss Hooves?  We are apparently on some sort of monitor screen and there is a human watching us come out of a weird treasure chest... I was almost certain that we walked directly into the Tardis just now, but we must have somehow gotten into this chest.  Hmm..."),
+	new Pony("Ditzy Doo","DERPILY COMMON","Hi there!  Helloooo... do you have any muffins??  I'm really getting the muffin craves right now and I could use some you got some?  Oooo pretty treasure chest!  I wonder I there are any muffins in here! Nope no muffins :c  that's very disappointing."),
+	new Pony("Lyra Heartstrings","COMMON","OMG I'm being watched by a human!  A real human!  I knew that they were real!  And oh my gosh are those hands you're using to click on a mouse with??  I've always loved hands!"),
+	new Pony("Bon Bon","CANDIDLY COMMON","Hi there!  If you haven't watched the show yet, I have to warn you that I apparently have many twin sisters or something because whenever there's a crowd, I tend to see them all over the place!"),
+	new Pony("Colgate Minuette","MINTY FRESHLY RARE","Brushie! Brushie! Brushie!  I'm just brushing my teeth which are so white and shiny!  That's because I take really good care of them!  I do wish that my cutie mark was a toothbrush or a tooth instead of a time glass, but cutie marks are just marks.  That doesn't mean that they have to define my personality!"),
+	new Pony("Golden Harvest","CARROTLY COMMON","Carrot Top is a pony who specializes in growing carrots and is very popular for the changeling society to copy because of all the Carrot Top multiples lying around in Ponyville!"),
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
 	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I'm in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
@@ -1462,8 +1473,24 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"alexiy777\n"+
 	"aeroyTechyon-X\n"+
 	"Mozlin\n"+
+	"tootootaloo\n"+
+	"Spaceponies\n"+
+	"TheEvilFlashAnimator\n"+
+	"SierraEx\n"+
+	"MoongazePonies\n"+
+	"BronyB34r\n"+
+	"Ispincharles\n"+
 	"Pheonix Dino\n"+
 	"Wishdream\n"+
+	
+	"\nVOICED BY\n"+
+	"Natalie Van Sistine & Alina Alberto (via DILeak Studios)\n"+
+	"Nowacking (via Alligator Tub Productions)\n"+
+	"Keikoandgilly\n"+
+	"Pierce Smoulder\n"+
+	"TheRobotButterfly\n"+
+	"MEMJ0123 (via TehJadeh)\n"+
+	"Rina-Chan (via AnimatedJames)\n"+
 	
 	"\nTYPEFACED BY\n"+
 	"Kiwi Media\n"+

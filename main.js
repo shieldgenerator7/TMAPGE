@@ -391,7 +391,7 @@ var ponyArray = [
 	new Pony("Applejack","RARE","Well howdy there!  I'm Applejack, but ya'll can call me AJ if you like!  I'm the most hardworking pony around these parts and produce the best apple cider in all of Equestria!  I got some delicious apple fritters, apple pies, apple tarts, zap apple jam, etc. to get a makin'.  I'll see ya'll later!"),
 	new Pony("Rainbow Dash","RARE","Rainbow Dash is the best most awesomest pony ever. As one filly said, she's \"super-ultra-extreme-awesomazing.\" She can fly really fast and is the only pony to ever pull off a Sonic Rainboom. She is loyal to her friends and is going to become the captain of the Wonderbolts some day. So awesome /)^3^(\\	"),
 	new Pony("Rarity","DEFINITION OF RARE","I may be the most lady-like and delicate out of my pony friends, but that most certainly doesn't mean that I cannot defend myself.  I was easily able to outwit the diamond dogs and get all those jewels that they slaved me to dig out.  I simply must go! This treasure chest has left my beautiful hair in rugged condition!  Ohhh my hair!"),
-	new Pony("Fluttershy","RARE","Um hi there I'm... Fluttershy.  If you haven't noticed by now I'm the shyest of my pony friends.  I may be the shyest and most sensitive, but that doesn't mean that I'm useless, or... I don't think I am... *eee*.  Anyway, I'm the pony that helped my friends out by contributing the little wittle bit of wingpower that was needed to get fresh water up to Cloudsdale.  *yay*"),
+	new Pony("Fluttershy","RARE","Um hi there I'm... Fluttershy.  If you haven't noticed by now I'm the shyest of my pony friends.  I may be the shyest and most sensitive, but that doesn't mean that I'm useless, or... I don't think I am... *eee*.  I help little critters from far and wide and keep them super healthy and happy...  *yay*"),
 	//CMC
 	new Pony("Apple Bloom","RARE","Howdy there!  My name is Apple Bloom and I'm a cute little filly with a pink bow in my hair. I think I look adorable in it!  I have a big sis, a big bro, a granny, and much more family spread all throughout Equestria! I don't have my cutie mark yet, but I'm sure will soon. There's no way my special ingredient pie scheme won't do the trick!"),
 	new Pony("Sweetie Belle","RARE","Sweetie Belle is a sweet little filly who often corrects her friend's vocabulary and apparently has the largest vocabulary out of the three CMC's.  This is why she is therefore proclaimed as being a dictionary.  Her and her friends also dream of getting their awesome cutie marks; and hey, maybe they'll get them in being a pony vector!"),
@@ -409,16 +409,16 @@ var ponyArray = [
 	new Pony("Octavia Melody","RARE","Oh hello there my fellow game players.  As you all know I am Octavia and I am the most appealing Cello player.  I apologize for making my introduction short, however I must get downstairs immediately otherwise Vinyl Scratch just may bust out the windows with her Wub Dishwasher!  Goodbye!"),
 	new Pony("Dr. Hooves","INTERTEMPORALLY RARE","Oh now this is rather odd don't you think Miss Hooves?  We are apparently on some sort of monitor screen and there is a human watching us come out of a weird treasure chest... I was almost certain that we walked directly into the Tardis just now, but we must have somehow gotten into this chest.  Hmm..."),
 	new Pony("Ditzy Doo","DERPILY COMMON","Hi there!  Helloooo... do you have any muffins??  I'm really getting the muffin craves right now and I could use some you got some?  Oooo pretty treasure chest!  I wonder I there are any muffins in here! Nope no muffins :c  that's very disappointing."),
-	new Pony("Lyra Heartstrings","COMMON","OMG I'm being watched by a human!  A real human!  I knew that they were real!  And oh my gosh are those hands you're using to click on a mouse with??  I've always loved hands!"),
+	new Pony("Lyra Heartstrings","COMMON","OMG I'm being watched by a human!  A real human!  I knew that they were real!  And oh my gosh are those hands you're using to play this game! I've always loved hands!"),
 	new Pony("Bon Bon","CANDIDLY COMMON","Hi there!  If you haven't watched the show yet, I have to warn you that I apparently have many twin sisters or something because whenever there's a crowd, I tend to see them all over the place!"),
 	new Pony("Colgate Minuette","MINTY FRESHLY RARE","Brushie! Brushie! Brushie!  I'm just brushing my teeth which are so white and shiny!  That's because I take really good care of them!  I do wish that my cutie mark was a toothbrush or a tooth instead of a time glass, but cutie marks are just marks.  That doesn't mean that they have to define my personality!"),
-	new Pony("Golden Harvest","CARROTLY COMMON","Carrot Top is a pony who specializes in growing carrots and is very popular for the changeling society to copy because of all the Carrot Top multiples lying around in Ponyville!"),
+	new Pony("Golden Harvest","CARROTLY COMMON","Well, that might not be scientifically accurate, but personally I think it's true. I used to wear glasses, and now, since I've been eating carrots, my sight is almost 20/20! Ow! I should really watch where I'm going. Eat more vegetables!"),
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
 	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I'm in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
 	new Pony("Skinner Box","CREEPILY COMMON","So I heard you like to play games? Well, I have a game for you. Here, press this button. Press it again. It's a game. It's not fun, but it's addicting. Why would you want a game to be fun... when you can want a game to be addicting? WoW. This game IS addicting. Heh Heh."),
 	new Pony("Phi","DIGITALLY RARE","This is Phi, the energetic My Little Game Dev mascot. She likes action games and is always looking for a new challenge."),
-	new Pony("Techna","DIGITALLY RARE","This is Techna, the calm My Little Game Dev mascot. She likes RPGs and puzzles games and enjoys figuring things out.")
+	new Pony("Techna","DIGITALLY RARE","This is Techna, the calm My Little Game Dev mascot. She likes RPGs and puzzles game and enjoys figuring things out.")
 ];
 maxPonies = ponyArray.length;
 for (var i = 0; i < maxPonies; i++){
@@ -1461,7 +1461,7 @@ var creditsText = "Hello!";
 {
 creditsText = "CREATED BY shieldgenerator7\n\n"+
 	
-	"WRITTEN BY\nPheonix Dino\n(and shieldgenerator7)\n\n"+
+	"WRITTEN BY\nPheonix Dino\nshieldgenerator7\n\n"+
 	
 	"VECTORED BY\n"+
 	"pikn2\n"+
@@ -1484,6 +1484,7 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"TheEvilFlashAnimator\n"+
 	"SierraEx\n"+
 	"MoongazePonies\n"+
+	"Moonbrony\n"+
 	"BronyB34r\n"+
 	"Ispincharles\n"+
 	"Pheonix Dino\n"+

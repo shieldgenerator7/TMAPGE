@@ -390,7 +390,7 @@ var ponyArray = [
 	new Pony("Pinkie Pie","RARE","Pinkie Pie is a hyperactive earth pony who throws parties everyday to satisfy her goal of becoming Equestria's #1 party thrower. And she's well on her way with her balloon cutiemark as proof. YEAH! PARTY! PARTY! PARTY!"),
 	new Pony("Applejack","RARE","Well howdy there!  I'm Applejack, but ya'll can call me AJ if you like!  I'm the most hardworking pony around these parts and produce the best apple cider in all of Equestria!  I got some delicious apple fritters, apple pies, apple tarts, zap apple jam, etc. to get a makin'.  I'll see ya'll later!"),
 	new Pony("Rainbow Dash","RARE","Rainbow Dash is the best most awesomest pony ever. As one filly said, she's \"super-ultra-extreme-awesomazing.\" She can fly really fast and is the only pony to ever pull off a Sonic Rainboom. She is loyal to her friends and is going to become the captain of the Wonderbolts some day. So awesome /)^3^(\\	"),
-	new Pony("Rarity","RARE","I may be the most lady-like and delicate out of my pony friends, but that most certainly doesn't mean that I cannot defend myself.  I was easily able to outwit the diamond dogs and get all those jewels that they slaved me to dig out.  I simply must go! This treasure chest has left my beautiful hair in rugged condition!  Ohhh my hair!"),
+	new Pony("Rarity","DEFINITION OF RARE","I may be the most lady-like and delicate out of my pony friends, but that most certainly doesn't mean that I cannot defend myself.  I was easily able to outwit the diamond dogs and get all those jewels that they slaved me to dig out.  I simply must go! This treasure chest has left my beautiful hair in rugged condition!  Ohhh my hair!"),
 	new Pony("Fluttershy","RARE","Um hi there I'm... Fluttershy.  If you haven't noticed by now I'm the shyest of my pony friends.  I may be the shyest and most sensitive, but that doesn't mean that I'm useless, or... I don't think I am... *eee*.  Anyway, I'm the pony that helped my friends out by contributing the little wittle bit of wingpower that was needed to get fresh water up to Cloudsdale.  *yay*"),
 	//CMC
 	new Pony("Apple Bloom","RARE","Howdy there!  My name is Apple Bloom and I'm a cute little filly with a pink bow in my hair. I think I look adorable in it!  I have a big sis, a big bro, a granny, and much more family spread all throughout Equestria! I don't have my cutie mark yet, but I'm sure will soon. There's no way my special ingredient pie scheme won't do the trick!"),
@@ -1515,10 +1515,12 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"\nFOR CODE SNIPPETS\n"+
 	"Binod Suman\n"+
 	"Colin Wiseman\n"+
+	"elico3000\n"+
 	
 	"\nFOR PLAYTESTING\n"+
 	"Pheonix Dino\n"+
 	"Vanni\n"+
+	"Xinef\n"+
 	
 	"\nFOR FLASH PUPPETS\n"+
 	"Zachary Rich and the Double Rainboom team\n"+

@@ -1361,6 +1361,12 @@ function chest_info(){
 		// }
 		newPony.sound.pause();
 	}
+	else if (playerFiring && !playerFired){
+		newChest = new Chest();
+		newChest.X = desiredWidth + centerX(chest.image.width);//start it off screen
+		newPony.sound.pause();
+		switchGameMode("chest_slide");
+	}
 	if (newPony.Y < 0){//centerY(newPony.image.height)){
 		newPony.velY = 1;
 		newPony.move();

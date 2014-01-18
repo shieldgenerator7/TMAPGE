@@ -42,7 +42,8 @@ var setupCanvas = function(){//sets up the canvas dimensions
 	//Set up ctx text settings
 	ctx.textAlign="left"; 
 	ctx.textBaseline="top"; 
-	ctx.font = "15px Roman"
+	ctx.font = "15px Times New Roman"
+	ctx.save();
 }
 setupCanvas();
 
@@ -621,6 +622,7 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	that.centerText = true;//whether or not it should align its text center
 	that.textSize = 50;
 	that.textFont = "black";
+	that.typeFace = "Times New Roman";
 	that.X2 = that.X + 20 + ctx.measureText(that.text).width;//X2 is used to get the end of the line (if it is a one-liner)
 	that.rotate = 0;
 	that.drawImageLast = false;
@@ -703,7 +705,7 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 					convertXPos(that.X), convertYPos(that.Y), convertWidth(that.image.width), convertHeight(that.image.height));
 				}
 				ctx.fillStyle = that.textFont;
-				ctx.font= convertHeight(that.textSize)+"px Roman";
+				ctx.font= convertHeight(that.textSize)+"px "+that.typeFace;
 				//ctx.fillText(that.text, convertXPos(that.X + 20), convertYPos(that.Y + 20), convertWidth(that.image.width*2),convertHeight(40));//that.text
 				that.usedY = that.Y + 20;		
 				var widthThing = (ctx.measureText(that.text).width)/canvasRatio;
@@ -1422,17 +1424,26 @@ function pony_info(){
 	btnLeft = new Button ("arrow_left",0,desiredHeight/2-160,0);
 	btnRight = new Button ("arrow_right",desiredWidth - 100,desiredHeight/2-160,0);
 	btnChest = new Button("button_chestT",5,105,"chest_inactive");
+	btnSound = new Button("button_ponysound",110,105,0);
 	//the following two controls may seem switched, but that's just to create the illusion that the newest pony is the first in the list (when internally it's the last)
 	if (cpi < (ponyCollection.length - 1) && !playerFired && btnLeft.checkClick(mouseX, mouseY, playerFiring)){
 		cpi += 1;
 		playerFired = true;
+		currentPony.sound.pause();
 	}
 	else if (cpi > 0 && !playerFired && btnRight.checkClick(mouseX, mouseY, playerFiring)){
 		cpi -= 1;
 		playerFired = true;
+		currentPony.sound.pause();
 	}
 	else if (!playerFired && btnChest.checkClick(mouseX,mouseY,playerFiring)){
 		playerFired = true;
+		currentPony.sound.pause();
+	}
+	else if (!playerFired && btnSound.checkClick(mouseX,mouseY,playerFiring)){
+		playerFired = true;
+		currentPony.sound.currentTime = 0;
+		currentPony.sound.play();
 	}
 	else if (!playerFired && playerFiring){
 		playerFired = true;
@@ -1447,6 +1458,7 @@ function pony_info(){
 	if (cpi < (ponyCollection.length - 1)){btnLeft.draw();}
 	if (cpi > 0){btnRight.draw();}
 	btnChest.draw();
+	btnSound.draw();
 	}
 	else if (!playerFired && playerFiring){
 		playerFired = true;

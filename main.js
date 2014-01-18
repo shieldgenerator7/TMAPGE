@@ -9,8 +9,8 @@ gLoop,
 c = document.getElementById('c'),
 ctx = c.getContext('2d');
 // ctx.save();
-DIR = "Resources\\";
-PONY_DIR = DIR+"Ponies\\";
+DIR = "Resources/";
+PONY_DIR = DIR.concat("Ponies/");
 
 var modeTime = 0;//counts the amount of time in any one gameMode
 var gameMode = "title_screen";
@@ -109,10 +109,10 @@ var convertYPos = function(y){
 }
 
 var backGroundImg = new Image();
-backGroundImg.src = DIR+"background.png";
+backGroundImg.src = DIR.concat("background.png");
 var clear = function(){
 	var img = new Image();
-	img.src = DIR+"background.png";
+	img.src = DIR.concat("background.png");
 
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.beginPath();
@@ -175,11 +175,11 @@ function Button(text, x, y, modeTo){
 	// that.width = 10;//text.length + 20;
 	// that.height = 5;//30;
 	
-	that.img = showImage(DIR+text+".png");
+	that.img = showImage(DIR.concat(text,".png"));
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	
-	var overImg = showImage(DIR+text+"_over.png");//used just to preload the over image
+	var overImg = showImage(DIR.concat(text,"_over.png"));//used just to preload the over image
 	
 	that.X = x;
 	that.Y = y;
@@ -190,7 +190,7 @@ function Button(text, x, y, modeTo){
 	//checks to see if it's been clicked
 	that.checkClick = function(x, y, click){
 		that.mouseOver = false;
-		that.img.src = DIR+text+".png";
+		that.img.src = DIR.concat(text,".png");
 			if (x > convertXPos(that.X)){//mouse-button collision detection
 				if (x < convertXPos(that.X + that.img.width)){
 					if (y > convertYPos(that.Y)){
@@ -216,7 +216,7 @@ function Button(text, x, y, modeTo){
 	//paints the button differently when moused over
 	that.onMouseOver = function(){
 		that.mouseOver = true;
-		that.img.src = DIR+text+"_over.png";
+		that.img.src = DIR.concat(text,"_over.png");
 	}
 	//draws the button
 	that.draw = function(){
@@ -249,7 +249,7 @@ function Pony(name,rarity,description){//Name of pony, also used for getting ima
 		that.index = index;
 	}
 
-	that.image = showImage(PONY_DIR+name+".png");
+	that.image = showImage(PONY_DIR.concat(name,".png"));
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	that.frames = 0;
@@ -259,7 +259,7 @@ function Pony(name,rarity,description){//Name of pony, also used for getting ima
 	that.velX = 0;//used for moving
 	that.velY = 0;
 	
-	that.sound = new Audio(PONY_DIR+name+".mp3");
+	that.sound = new Audio(PONY_DIR.concat(name,".mp3"));
 			
 	that.setPosition = function(x, y){
 		that.X = x;
@@ -409,7 +409,7 @@ var ponyArray = [
 	new Pony("Vinyl Scratch","RADICALLY RARE","WUB! WUB! WUB! WUB!  I love my music wubs!  Dubstep is the stuff!  Who am I?  I'm the master of mixing up music yeah baby!"),
 	new Pony("Octavia Melody","RARE","Oh hello there my fellow game players.  As you all know I am Octavia and I am the most appealing Cello player.  I apologize for making my introduction short, however I must get downstairs immediately otherwise Vinyl Scratch just may bust out the windows with her Wub Dishwasher!  Goodbye!"),
 	new Pony("Dr. Hooves","INTERTEMPORALLY RARE","Oh now this is rather odd don't you think Miss Hooves?  We are apparently on some sort of monitor screen and there is a human watching us come out of a weird treasure chest... I was almost certain that we walked directly into the Tardis just now, but we must have somehow gotten into this chest.  Hmm..."),
-	new Pony("Ditzy Doo","DERPILY COMMON","Hi there!  Helloooo... do you have any muffins??  I'm really getting the muffin craves right now and I could use some you got some?  Oooo pretty treasure chest!  I wonder I there are any muffins in here! Nope no muffins :c  that's very disappointing."),
+	new Pony("Ditzy Doo","DERPILY COMMON","Hi there!  Helloooo... do you have any muffins??  I'm really getting the muffin craves right now and I could use some you got some?  Oooo pretty treasure chest!  I wonder if there are any muffins in here! Nope no muffins :c  that's very disappointing."),
 	new Pony("Lyra Heartstrings","COMMON","OMG I'm being watched by a human!  A real human!  I knew that they were real!  And oh my gosh are those hands you're using to play this game! I've always loved hands!"),
 	new Pony("Bon Bon","CANDIDLY COMMON","Hi there!  If you haven't watched the show yet, I have to warn you that I apparently have many twin sisters or something because whenever there's a crowd, I tend to see them all over the place!"),
 	new Pony("Colgate Minuette","MINTY FRESHLY RARE","Brushie! Brushie! Brushie!  I'm just brushing my teeth which are so white and shiny!  That's because I take really good care of them!  I do wish that my cutie mark was a toothbrush or a tooth instead of a time glass, but cutie marks are just marks.  That doesn't mean that they have to define my personality!"),
@@ -479,10 +479,10 @@ function Chest(){//Chest class
 	that.frontImage = new Image();
 	that.markForDeletion = false;
 	
-	that.image = showImage(DIR+"chest_anim.png");
+	that.image = showImage(DIR.concat("chest_anim.png"));
 	that.width = 590;
 	that.height = 579;
-	that.frontImage = showImage(DIR+"chest_front.png");
+	that.frontImage = showImage(DIR.concat("chest_front.png"));
 	that.frames = 1;
 	that.actualFrame = 0;
 	that.X = 0;
@@ -609,7 +609,7 @@ function TextFrame(text, filename, x, y){//the class that contains the text for 
 	that.image = new Image();
 	that.markForDeletion = false;
 	
-	that.image = showImage(DIR+filename+".png");
+	that.image = showImage(DIR.concat(filename,".png"));
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	that.frames = 0;
@@ -967,7 +967,7 @@ function Particle(filename, x, y){//1-12-2013 copied from Pony class
 	that.image = new Image();
 	that.markForDeletion = false;	
 
-	that.image = showImage(DIR+filename+".png");
+	that.image = showImage(DIR.concat(filename,".png"));
 	that.width = imgWidth;
 	that.height = imgHeight; 
 	that.frames = 0;
@@ -1215,7 +1215,7 @@ var GameLoop = function(){
 	// var ponp = new Image();
 	// ponp.src = DIR+"tmapge.png";//w:398 //Math.random(width - 100 + 100 + 1) + 100, Math.random(height - 100 + 100 + 1) + 100
 	var logo = new Image();
-	logo.src = DIR+"logo.png";
+	logo.src = DIR.concat("logo.png");
 	logo.onload = function(){scaleImage(logo, desiredWidth-10, 0);};
 function title_screen(){//title screen
 	// ctx.drawImage(ponp, convertXPos(centerX(ponp.width)), 0, convertWidth(ponp.width),convertHeight(ponp.height));
@@ -1481,7 +1481,7 @@ function pony_info(){
 // var creditsImg = new Image();
 // creditsImg.src = DIR+"creditPage.png";
 var logoImg = new Image();
-logoImg.src = DIR+"tmapge.png";
+logoImg.src = DIR.concat("tmapge.png");
 var creditsText = "Hello!";
 {
 creditsText = "CREATED BY shieldgenerator7\n\n"+

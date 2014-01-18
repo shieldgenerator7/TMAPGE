@@ -128,7 +128,7 @@ var clear = function(){
 
 var drawForeGround = function(){
 	var prevFillStyle = ctx.fillStyle;
-	ctx.fillStyle = 'BAF1FA';
+	ctx.fillStyle = '#BAF1FA';
 	ctx.beginPath();
 	ctx.fillRect(0, 0, tcx, c.height);	
 	ctx.closePath();

@@ -413,7 +413,7 @@ var ponyArray = [
 	new Pony("Lyra Heartstrings","COMMON","OMG I'm being watched by a human!  A real human!  I knew that they were real!  And oh my gosh are those hands you're using to play this game! I've always loved hands!"),
 	new Pony("Bon Bon","CANDIDLY COMMON","Hi there!  If you haven't watched the show yet, I have to warn you that I apparently have many twin sisters or something because whenever there's a crowd, I tend to see them all over the place!"),
 	new Pony("Colgate Minuette","MINTY FRESHLY RARE","Brushie! Brushie! Brushie!  I'm just brushing my teeth which are so white and shiny!  That's because I take really good care of them!  I do wish that my cutie mark was a toothbrush or a tooth instead of a time glass, but cutie marks are just marks.  That doesn't mean that they have to define my personality!"),
-	new Pony("Golden Harvest","CARROTLY COMMON","Well, that might not be scientifically accurate, but personally I think it's true. I used to wear glasses, and now, since I've been eating carrots, my sight is almost 20/20! Ow! I should really watch where I'm going. Eat more vegetables!"),
+	new Pony("Golden Harvest","CARROTLY COMMON","Well, that might not be scientifically accurate, but personally I think it's true. I used to wear glasses, and now, since I've been eating carrots, my sight is almost 20/20!\nOw! I should really watch where I'm going. Eat more vegetables!"),
 	//OCs
 	new Pony("Shield Generator VII","INTERDIMENSIONALY RARE","Hello, I am Shield Generator VII, and I created this game. As a unicorn, I specialize my magic in portals and shields. You think I'd be able to finish this game in a day or two, but I'm kind of slow at programming :P"),
 	new Pony("Pheonix Dino","JURASSICALLY RARE","Hi my name is Pheonix Dino (and yes I do know that Phoenix is spelled wrong).  The reason I'm in here is because I am the OC of the description writer!  I get to where I need to go really fast because my wings turn to a bursting flame (sort of like a built-in rocket booster) when I am flying at top speed!"),
@@ -441,7 +441,7 @@ var pickRandomPony = function(){
 		return new Pony(ponyArray[ri].name, ponyArray[ri].rarity, ponyArray[ri].description);
 	}
 	else{
-		return new Pony("Unknown","Not possible","You're not supposed to be able to get this pony!");
+		return new Pony("Unknown","Not possible","You're not supposed to be able to get this pony!\n\n#UnknownPony");
 	}
 }
 
@@ -1238,13 +1238,15 @@ function title_screen(){//title screen
 	ctx.fillText("#MLGDMarathon December 2013", 5 + tcx, areaHeight - 20);
 }
 var chest = new Chest();
+var hasPast100 = 0;//set to 1 when the 100 splashscreen has been shown, set to 2 after it's been shown (and not going to be shown again)
 function chest_inactive(){
 	btnOpen = new Button ("button_chest",chest.X-54,chest.Y-248,"chest_opening");
 	btnPony = new Button ("button_pony",215,5,"pony_info");
 	btnTitle = new Button ("button_title",5,5,"title_screen");	
 	btnCredits = new Button ("button_credits",110,5,"credits");
 	btnTri = new Button("button_triangle",desiredWidth-114,desiredHeight-165,0);
-	if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
+	if (hasPast100 >= 1 && hasPast100 <= 2){}//just to here to keep other buttons from activating when 100 splashscreen is displayed
+	else if (btnOpen.checkClick(mouseX, mouseY, playerFiring)){
 		chest.playAnimation();//tells the chest to start playing the animation
 		chest.sparkleEffect.end();
 	}
@@ -1276,6 +1278,17 @@ function chest_inactive(){
 	// sparkleEffect.draw();
 	if (textBoxOpened){
 		evaluateTextBox();
+	}
+	if (hasPast100 < 3 && ponyCollection.length >= 100){//all the way down here to make sure it's drawn on top
+		if (hasPast100 == 0){hasPast100 = 1;}
+		var reText = "CONGRATULATIONS!\nYou've collected 100 ponies!\n\nThank you so much for playing this game!\nIt's difficult to go alone. Here, take this:\n#GrindingForLife\n\nNow, go check out all the other awesome games from the Mareathon! Have fun!\n-shieldgenerator7";
+		var reFrame = new TextFrame(reText,"reFrame",0,-300);//CODE HAZARD: relies on a bug to get in correct position
+		reFrame.drawImageLast = true;
+		reFrame.draw();
+		if (!playerFired && playerFiring){
+			hasPast100 += 1;
+			playerFired = true;
+		}
 	}
 };
 function chest_opening(){
@@ -1534,6 +1547,7 @@ creditsText = "CREATED BY shieldgenerator7\n\n"+
 	"Pheonix Dino\n"+
 	"Vanni\n"+
 	"Xinef\n"+
+	"Wishdream\n"+
 	
 	"\nFOR FLASH PUPPETS\n"+
 	"Zachary Rich and the Double Rainboom team\n"+
